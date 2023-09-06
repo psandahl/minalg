@@ -1,6 +1,7 @@
 #include "minalg/matrix.hpp"
 
 #include <cstring>
+#include <sstream>
 
 namespace minalg {
 
@@ -81,6 +82,28 @@ Matrix::~Matrix()
     _columns = 0;
     delete[] _data;
     _data = nullptr;
+}
+
+std::string Matrix::info(std::streamsize precision) const
+{
+    std::stringstream ss;
+    ss.precision(precision);
+
+    ss << "[\n";
+    for (std::size_t row = 0; row < rows(); ++row) {
+        ss << "  ";
+        for (std::size_t column = 0; column < columns(); ++column) {
+            ss << get(row, column);
+            if (column < columns() - 1) {
+                ss << ", ";
+            } else {
+                ss << '\n';
+            }
+        }
+    }
+    ss << "]" << std::endl;
+
+    return ss.str();
 }
 
 }

@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <stdexcept>
+#include <string>
 #include <tuple>
 #include <vector>
 
@@ -117,6 +118,13 @@ public:
     const double& get(std::size_t row, std::size_t column) const { 
         return _data[linear(row, column)];
     }
+
+    /**
+     * @brief Render a string representation.
+     * @param precision the numeric precision.
+     * @return the info string.
+    */
+    std::string info(std::streamsize precision = 5) const;
 
 private:
     std::size_t linear(std::size_t row, std::size_t column) const {

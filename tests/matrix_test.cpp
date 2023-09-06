@@ -26,3 +26,25 @@ TEST(MatrixTest, InvalidConstruction)
     EXPECT_THROW(minalg::Matrix(1, 0), std::invalid_argument);  
     EXPECT_THROW(minalg::Matrix(0, 1), std::invalid_argument);      
 }
+
+TEST(MatrixTest, SetAndGet)
+{
+    minalg::Matrix m(2, 2);
+    m.at(0, 0) = 1.0;
+    m.at(0, 1) = 2.0;
+    m.at(1, 0) = 3.0;
+    m.at(1, 1) = 4.0;
+
+    EXPECT_DOUBLE_EQ(m.get(0, 0), 1.0);
+    EXPECT_DOUBLE_EQ(m.get(0, 1), 2.0);
+    EXPECT_DOUBLE_EQ(m.get(1, 0), 3.0);
+    EXPECT_DOUBLE_EQ(m.get(1, 1), 4.0);
+}
+
+TEST(MatrixTest, AccessOutOfRange)
+{
+    minalg::Matrix m(3, 3);
+    EXPECT_THROW(m.at(2, 3), std::out_of_range);
+    EXPECT_THROW(m.at(3, 2), std::out_of_range);
+    EXPECT_THROW(m.at(3, 3), std::out_of_range);
+}

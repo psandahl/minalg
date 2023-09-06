@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <stdexcept>
 #include <tuple>
 
 namespace minalg {
@@ -16,6 +17,33 @@ public:
      * @param columns the number of columns.
     */
     Matrix(std::size_t rows, std::size_t columns);
+
+    /**
+     * @brief Copy constructor.
+     * @param other the Matrix to copy.     
+    */
+    Matrix(const Matrix& other);
+
+    /**
+     * @brief Copy assignment operator.
+     * @param other the Matrix to copy.
+     * @return this matrix.
+    */
+    Matrix& operator = (const Matrix& other);
+
+    /**
+     * @brief Move constructor.
+     * @param other the Matrix to move.   
+    */
+    Matrix(Matrix&& other);
+
+    /**
+     * @brief Move assignment operator.
+     * @param other the Matrix to move.
+     * @return this matrix.
+    */
+    Matrix& operator = (Matrix&& other);
+
     Matrix() = delete;
 
     /**
@@ -48,10 +76,48 @@ public:
      * @return the size.
     */
     std::size_t size() const { return rows() * columns(); }
+
+    /**
+     * @brief Range checked access to matrix element.
+     * @param row the row.
+     * @param column the column.
+     * @return reference to the requested element.
+    */
+    double& at(std::size_t row, std::size_t column) {
+        if (row < rows() && column < columns()) {
+            return _data[linear(row, column)];
+        } else {
+            throw std::out_of_range("Indexing outside of the matrix");
+        }
+    }
+    const double& at(std::size_t row, std::size_t column) const { 
+        if (row < rows() && column < columns()) {
+            return _data[linear(row, column)];
+        } else {
+            throw std::out_of_range("Indexing outside of the matrix");
+        }
+    }
     
+    /**
+     * @brief Non range checked access to matrix element.
+     * @param row the row.
+     * @param column the column.
+     * @return reference to the requested element.
+    */
+    double& get(std::size_t row, std::size_t column) { 
+        return _data[linear(row, column)];
+    }
+    const double& get(std::size_t row, std::size_t column) const { 
+        return _data[linear(row, column)];
+    }
+
 private:
-    const std::size_t _rows;
-    const std::size_t _columns;
+    std::size_t linear(std::size_t row, std::size_t column) const {
+        return row * columns() + column;
+    }
+
+    std::size_t _rows;
+    std::size_t _columns;
     double *_data;
 };
 

@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <stdexcept>
 #include <tuple>
+#include <vector>
 
 namespace minalg {
 
@@ -17,6 +18,12 @@ public:
      * @param columns the number of columns.
     */
     Matrix(std::size_t rows, std::size_t columns);
+
+    /**
+     * @brief Create a row matrix from a vector.
+     * @param vec the data vector.
+    */
+    Matrix(const std::vector<double>& vec);
 
     /**
      * @brief Copy constructor.

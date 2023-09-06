@@ -18,6 +18,14 @@ Matrix::Matrix(std::size_t rows, std::size_t columns):
     std::memset(_data, 0, sizeof(double) * size);
 }
 
+Matrix::Matrix(const std::vector<double>& vec):
+    _rows(1),
+    _columns(vec.size()),
+    _data(new double[vec.size()])
+{
+    std::memcpy(_data, vec.data(), sizeof(double) * vec.size());
+}
+
 Matrix::Matrix(const Matrix& other):
     _rows(other.rows()),
     _columns(other.columns()),

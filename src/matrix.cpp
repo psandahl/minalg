@@ -110,11 +110,37 @@ Matrix Matrix::eye(std::size_t dim)
 {
     Matrix m(dim, dim);
 
-    for (int i = 0; i < dim; ++i) {
+    for (std::size_t i = 0; i < dim; ++i) {
         m.get(i, i) = 1.0;
     }
 
     return m;
+}
+
+Matrix Matrix::diag(const std::vector<double>& vec)
+{
+    const std::size_t dim = vec.size();
+    Matrix m(dim, dim);
+
+    for (std::size_t i = 0; i < dim; ++i) {
+        m.get(i, i) = vec[i];
+    }
+
+    return m;
+}
+std::vector<double> Matrix::diag(const Matrix& m)
+{
+    std::vector<double> vec(m.rows());
+
+    if (m.is_square()) {
+        for (std::size_t i = 0; i < m.rows(); ++i) {
+            vec[i] = m.get(i, i);
+        }
+    } else {
+        throw std::invalid_argument("Attempting to extract diagonal from non-square matrix");
+    }
+
+    return vec;
 }
 
 void Matrix::reshape(Matrix& m, const std::tuple<std::size_t, std::size_t>& shape)

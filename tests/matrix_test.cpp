@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <memory>
 #include <stdexcept>
+#include <vector>
 
 #include <gtest/gtest.h>
 
@@ -156,6 +157,29 @@ TEST(MatrixTest, Eye)
     EXPECT_DOUBLE_EQ(m.get(0, 1), 0.0);
     EXPECT_DOUBLE_EQ(m.get(1, 0), 0.0);
     EXPECT_DOUBLE_EQ(m.get(1, 1), 1.0);
+}
+
+TEST(MatrixTest, ValidDiag)
+{
+    const std::vector<double> vec0 = {1.0, 2.0, 3.0};
+    minalg::Matrix m(minalg::Matrix::diag(vec0));
+    EXPECT_EQ(m.rows(), vec0.size());
+    EXPECT_EQ(m.columns(), vec0.size());
+    EXPECT_DOUBLE_EQ(m.get(0, 0), 1.0);
+    EXPECT_DOUBLE_EQ(m.get(1, 1), 2.0);
+    EXPECT_DOUBLE_EQ(m.get(2, 2), 3.0);
+
+    const std::vector<double> vec1(m.diag());
+    EXPECT_EQ(vec0.size(), vec1.size());
+    EXPECT_DOUBLE_EQ(vec0[0], vec1[0]);
+    EXPECT_DOUBLE_EQ(vec0[1], vec1[1]);
+    EXPECT_DOUBLE_EQ(vec0[2], vec1[2]);
+}
+
+TEST(MatrixTest, InvalidDiag)
+{
+    minalg::Matrix m(3, 2);
+    EXPECT_THROW(m.diag(), std::invalid_argument);
 }
 
 TEST(MatrixTest, ValidReshape)

@@ -86,6 +86,12 @@ public:
     std::size_t size() const { return rows() * columns(); }
 
     /**
+     * @brief Check whether a matrix is square.
+     * @return boolean value.
+    */
+    bool is_square() const { return rows() == columns(); }
+
+    /**
      * @brief Range checked access to matrix element.
      * @param row the row.
      * @param column the column.
@@ -120,6 +126,12 @@ public:
     }
 
     /**
+     * @brief Extract the diagonal values.
+     * @return vector with values.
+    */
+    std::vector<double> diag() const { return diag(*this); }
+
+    /**
      * @brief Reshape this matrix.
      * @param shape new shape.
     */
@@ -152,6 +164,19 @@ public:
      * @return the identity matrix.
     */
     static Matrix eye(std::size_t dim);
+
+    /**
+     * @brief Create a diagonal matrix.
+     * @param dim the values for the diagonal.
+     * @return the diagonal matrix.
+    */
+    static Matrix diag(const std::vector<double>& vec);
+
+    /**
+     * @brief Extract the diagonal values.
+     * @return vector with values.
+    */
+    static std::vector<double> diag(const Matrix& m);
 
     /**
      * @brief Reshape the matrix to new shape.

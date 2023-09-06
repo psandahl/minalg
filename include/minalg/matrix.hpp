@@ -126,6 +126,13 @@ public:
     */
     std::string info(std::streamsize precision = 5) const;
 
+    /**
+     * @brief Create an identity matrix.
+     * @param dim the matrix dimension.
+     * @return the identity matrix.
+    */
+    static Matrix eye(std::size_t dim);
+
 private:
     std::size_t linear(std::size_t row, std::size_t column) const {
         return row * columns() + column;

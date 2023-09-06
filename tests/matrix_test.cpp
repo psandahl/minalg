@@ -148,3 +148,12 @@ TEST(MatrixTest, AccessOutOfRange)
     EXPECT_THROW(m.at(3, 2), std::out_of_range);
     EXPECT_THROW(m.at(3, 3), std::out_of_range);
 }
+
+TEST(MatrixTest, Eye)
+{
+    minalg::Matrix m(minalg::Matrix::eye(2));
+    EXPECT_DOUBLE_EQ(m.get(0, 0), 1.0);
+    EXPECT_DOUBLE_EQ(m.get(0, 1), 0.0);
+    EXPECT_DOUBLE_EQ(m.get(1, 0), 0.0);
+    EXPECT_DOUBLE_EQ(m.get(1, 1), 1.0);
+}

@@ -106,4 +106,15 @@ std::string Matrix::info(std::streamsize precision) const
     return ss.str();
 }
 
+Matrix Matrix::eye(std::size_t dim)
+{
+    Matrix m(dim, dim);
+
+    for (int i = 0; i < dim; ++i) {
+        m.get(i, i) = 1.0;
+    }
+
+    return m;
+}
+
 }

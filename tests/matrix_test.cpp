@@ -33,8 +33,8 @@ TEST(MatrixTest, LiteralConstruction)
     const std::vector<double> vec = { 1.0, 2.0, 3.0, 4.0 };
     
     minalg::Matrix m(vec);
-    EXPECT_EQ(m.rows(), 1);
-    EXPECT_EQ(m.columns(), vec.size());
+    EXPECT_EQ(m.rows(), vec.size());
+    EXPECT_EQ(m.columns(), 1);
     EXPECT_DOUBLE_EQ(m.get(0, 0), 1.0);
     EXPECT_DOUBLE_EQ(m.get(0, 1), 2.0);
     EXPECT_DOUBLE_EQ(m.get(0, 2), 3.0);

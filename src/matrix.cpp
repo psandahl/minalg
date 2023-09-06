@@ -117,4 +117,15 @@ Matrix Matrix::eye(std::size_t dim)
     return m;
 }
 
+void Matrix::reshape(Matrix& m, const std::tuple<std::size_t, std::size_t>& shape)
+{
+    const auto [rows, columns] = shape;
+    if (m.size() == rows * columns) {
+        m._rows = rows;
+        m._columns = columns;
+    } else {
+        throw std::invalid_argument("Can only reshape to equal and valid size");
+    }
+}
+
 }

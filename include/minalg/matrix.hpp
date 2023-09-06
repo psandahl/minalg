@@ -76,7 +76,7 @@ public:
      * @return tuple<rows, columns>.
     */
     std::tuple<std::size_t, std::size_t> shape() const {
-        return std::make_tuple(rows(), columns());
+        return { rows(), columns() };
     }
 
     /**
@@ -120,6 +120,26 @@ public:
     }
 
     /**
+     * @brief Reshape this matrix.
+     * @param shape new shape.
+    */
+    void reshaped(const std::tuple<std::size_t, std::size_t>& shape) {
+        reshape(*this, shape);
+    }
+
+    /**
+     * @brief Create a reshaped copy of this matrix.
+     * @param shape new shape.
+     * @return reshaped matrix.
+    */
+    Matrix reshape(const std::tuple<std::size_t, std::size_t>& shape) const {
+        Matrix m(*this);
+        reshape(m, shape);
+
+        return m;
+    }
+
+    /**
      * @brief Render a string representation.
      * @param precision the numeric precision.
      * @return the info string.
@@ -132,6 +152,13 @@ public:
      * @return the identity matrix.
     */
     static Matrix eye(std::size_t dim);
+
+    /**
+     * @brief Reshape the matrix to new shape.
+     * @param m matrix to reshape.
+     * @param shape new shape.
+    */
+    static void reshape(Matrix& m, const std::tuple<std::size_t, std::size_t>& shape);
 
 private:
     std::size_t linear(std::size_t row, std::size_t column) const {

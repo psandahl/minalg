@@ -157,3 +157,27 @@ TEST(MatrixTest, Eye)
     EXPECT_DOUBLE_EQ(m.get(1, 0), 0.0);
     EXPECT_DOUBLE_EQ(m.get(1, 1), 1.0);
 }
+
+TEST(MatrixTest, ValidReshape)
+{
+    const std::vector<double> vec = { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 };
+    minalg::Matrix m0(vec);
+
+    minalg::Matrix m1(m0.reshape({2, 3}));
+    EXPECT_EQ(m1.rows(), 2);
+    EXPECT_EQ(m1.columns(), 3);
+    EXPECT_DOUBLE_EQ(m1.get(0, 0), 1.0);
+    EXPECT_DOUBLE_EQ(m1.get(0, 1), 2.0);
+    EXPECT_DOUBLE_EQ(m1.get(0, 2), 3.0);
+    EXPECT_DOUBLE_EQ(m1.get(1, 0), 4.0);
+    EXPECT_DOUBLE_EQ(m1.get(1, 1), 5.0);
+    EXPECT_DOUBLE_EQ(m1.get(1, 2), 6.0);
+}
+
+TEST(MatrixTest, InvalidReshape)
+{
+    const std::vector<double> vec = { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 };
+    minalg::Matrix m0(vec);
+
+    EXPECT_THROW(m0.reshape({2, 2}), std::invalid_argument);
+}

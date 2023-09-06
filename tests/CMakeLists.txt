@@ -11,10 +11,13 @@ add_executable(
   minalg_test
   matrix_test.cpp
 )
+target_compile_features(minalg_test PRIVATE cxx_std_17)
+
 target_link_libraries(
   minalg_test
+  PRIVATE
+  minalg
   GTest::gtest_main
 )
 
-include(GoogleTest)
-gtest_discover_tests(minalg_test)
+add_test(NAME minalg_test COMMAND minalg_test)

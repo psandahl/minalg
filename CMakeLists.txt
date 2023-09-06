@@ -17,8 +17,4 @@ endif()
 include(FetchContent)
 
 add_subdirectory(src)
-
-if (BUILD_TESTING)
-    message(STATUS "Testing")
-    add_subdirectory(tests)
-endif()
+add_subdirectory(tests)

@@ -43,13 +43,10 @@ Matrix& Matrix::operator = (const Matrix& other)
 Matrix::Matrix(Matrix&& other):
     _rows(other.rows()),
     _columns(other.columns()),
-    _data(new double[other.size()])
+    _data(other._data)
 {
-    std::memcpy(_data, other._data, sizeof(double) * other.size());
-
     other._rows = 0;
     other._columns = 0;
-    delete[] other._data;
     other._data = nullptr;
 }
 
@@ -60,12 +57,10 @@ Matrix& Matrix::operator = (Matrix&& other)
 
         _rows = other.rows();
         _columns = other.columns();
-        _data = new double[other.size()];
-        std::memcpy(_data, other._data, sizeof(double) * other.size());
+        _data = other._data;        
 
         other._rows = 0;
-        other._columns = 0;
-        delete[] other._data;
+        other._columns = 0;        
         other._data = nullptr;
     }
 

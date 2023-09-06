@@ -130,28 +130,27 @@ Matrix Matrix::diag(const std::vector<double>& vec)
 }
 std::vector<double> Matrix::diag(const Matrix& m)
 {
-    std::vector<double> vec(m.rows());
-
-    if (m.is_square()) {
-        for (std::size_t i = 0; i < m.rows(); ++i) {
-            vec[i] = m.get(i, i);
-        }
-    } else {
+    if (!m.is_square()) {
         throw std::invalid_argument("Attempting to extract diagonal from non-square matrix");
     }
 
+    std::vector<double> vec(m.rows());
+    for (std::size_t i = 0; i < m.rows(); ++i) {
+        vec[i] = m.get(i, i);
+    }
+    
     return vec;
 }
 
 void Matrix::reshape(Matrix& m, const std::tuple<std::size_t, std::size_t>& shape)
 {
     const auto [rows, columns] = shape;
-    if (m.size() == rows * columns) {
-        m._rows = rows;
-        m._columns = columns;
-    } else {
+    if (m.size() != rows * columns) {
         throw std::invalid_argument("Can only reshape to equal and valid size");
     }
+
+    m._rows = rows;
+    m._columns = columns;    
 }
 
 }

@@ -98,18 +98,18 @@ public:
      * @return reference to the requested element.
     */
     double& at(std::size_t row, std::size_t column) {
-        if (row < rows() && column < columns()) {
-            return _data[linear(row, column)];
-        } else {
+        if (row >= rows() || column >= columns()) {
             throw std::out_of_range("Indexing outside of the matrix");
         }
+
+        return get(row, column);
     }
     const double& at(std::size_t row, std::size_t column) const { 
-        if (row < rows() && column < columns()) {
-            return _data[linear(row, column)];
-        } else {
+        if (row >= rows() || column >= columns()) {
             throw std::out_of_range("Indexing outside of the matrix");
         }
+
+        return get(row, column);
     }
     
     /**

@@ -152,6 +152,12 @@ public:
     }
 
     /**
+     * @brief Create a transposed copy of this matrix.
+     * @return transposed matrix.
+    */
+    Matrix transpose() const { return transpose(*this); }
+
+    /**
      * @brief Render a string representation.
      * @param precision the numeric precision.
      * @return the info string.
@@ -184,6 +190,19 @@ public:
      * @param shape new shape.
     */
     static void reshape(Matrix& m, const std::tuple<std::size_t, std::size_t>& shape);
+
+    /**
+     * @brief Transpose m0 into m1.
+     * @param m0 matrix to transpose.
+     * @param m1 transposed matrix.
+    */
+    static void transpose(const Matrix& m0, Matrix& m1);
+
+    /**
+     * @brief Transpose the matrix.
+     * @return transposed matrix.
+    */
+    static Matrix transpose(const Matrix& m);
 
 private:
     std::size_t linear(std::size_t row, std::size_t column) const {

@@ -128,6 +128,7 @@ Matrix Matrix::diag(const std::vector<double>& vec)
 
     return m;
 }
+
 std::vector<double> Matrix::diag(const Matrix& m)
 {
     if (!m.is_square()) {
@@ -151,6 +152,29 @@ void Matrix::reshape(Matrix& m, const std::tuple<std::size_t, std::size_t>& shap
 
     m._rows = rows;
     m._columns = columns;    
+}
+
+void Matrix::transpose(const Matrix& m0, Matrix& m1)
+{
+    const auto [rows0, columns0] = m0.shape();
+    const auto [rows1, columns1] = m1.shape();
+    if (rows0 != columns1 || rows1 != columns0) {
+        throw std::invalid_argument("Non matching dimensions for transpose");
+    }
+
+    for (std::size_t i = 0; i < columns0; ++i) {
+        for (std::size_t j = 0; j < rows0; ++j) {
+            m1.at(i, j) = m0.get(j, i);
+        }
+    }
+}
+
+Matrix Matrix::transpose(const Matrix& m)
+{
+    Matrix m1(m.columns(), m.rows());
+    transpose(m, m1);
+
+    return m1;
 }
 
 }

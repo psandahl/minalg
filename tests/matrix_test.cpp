@@ -1,6 +1,7 @@
 #include "minalg/matrix.hpp"
 
 #include <cstddef>
+#include <memory>
 #include <stdexcept>
 
 #include <gtest/gtest.h>
@@ -25,6 +26,92 @@ TEST(MatrixTest, InvalidConstruction)
     EXPECT_THROW(minalg::Matrix(0, 0), std::invalid_argument);  
     EXPECT_THROW(minalg::Matrix(1, 0), std::invalid_argument);  
     EXPECT_THROW(minalg::Matrix(0, 1), std::invalid_argument);      
+}
+
+TEST(MatrixTest, CopyConstruction)
+{
+    static constexpr std::size_t dim = 2;
+
+    minalg::Matrix m0(dim, dim);
+    m0.at(0, 0) = 1.0;
+    m0.at(0, 1) = 2.0;
+    m0.at(1, 0) = 3.0;
+    m0.at(1, 1) = 4.0;
+
+    minalg::Matrix m1(m0);
+    EXPECT_EQ(m0.rows(), dim);
+    EXPECT_EQ(m1.rows(), dim);
+    EXPECT_EQ(m0.columns(), dim);
+    EXPECT_EQ(m1.columns(), dim);
+    EXPECT_DOUBLE_EQ(m1.get(0, 0), 1.0);
+    EXPECT_DOUBLE_EQ(m1.get(0, 1), 2.0);
+    EXPECT_DOUBLE_EQ(m1.get(1, 0), 3.0);
+    EXPECT_DOUBLE_EQ(m1.get(1, 1), 4.0);
+}
+
+TEST(MatrixTest, CopyAssignment)
+{
+    static constexpr std::size_t dim = 2;
+
+    minalg::Matrix m0(dim, dim);
+    m0.at(0, 0) = 1.0;
+    m0.at(0, 1) = 2.0;
+    m0.at(1, 0) = 3.0;
+    m0.at(1, 1) = 4.0;
+
+    minalg::Matrix m1(3, 6);
+    m1 = m0;
+    EXPECT_EQ(m0.rows(), dim);
+    EXPECT_EQ(m1.rows(), dim);
+    EXPECT_EQ(m0.columns(), dim);
+    EXPECT_EQ(m1.columns(), dim);
+    EXPECT_DOUBLE_EQ(m1.get(0, 0), 1.0);
+    EXPECT_DOUBLE_EQ(m1.get(0, 1), 2.0);
+    EXPECT_DOUBLE_EQ(m1.get(1, 0), 3.0);
+    EXPECT_DOUBLE_EQ(m1.get(1, 1), 4.0);
+}
+
+TEST(MatrixTest, MoveConstruction)
+{
+    static constexpr std::size_t dim = 2;
+
+    minalg::Matrix m0(2, 2);
+    m0.at(0, 0) = 1.0;
+    m0.at(0, 1) = 2.0;
+    m0.at(1, 0) = 3.0;
+    m0.at(1, 1) = 4.0;
+
+    minalg::Matrix m1(std::move(m0));
+    EXPECT_EQ(m0.rows(), 0);
+    EXPECT_EQ(m1.rows(), dim);
+    EXPECT_EQ(m0.columns(), 0);
+    EXPECT_EQ(m1.columns(), dim);
+    EXPECT_DOUBLE_EQ(m1.get(0, 0), 1.0);
+    EXPECT_DOUBLE_EQ(m1.get(0, 1), 2.0);
+    EXPECT_DOUBLE_EQ(m1.get(1, 0), 3.0);
+    EXPECT_DOUBLE_EQ(m1.get(1, 1), 4.0);    
+}
+
+TEST(MatrixTest, MoveAssignment)
+{
+    static constexpr std::size_t dim = 2;
+
+    minalg::Matrix m0(2, 2);
+    m0.at(0, 0) = 1.0;
+    m0.at(0, 1) = 2.0;
+    m0.at(1, 0) = 3.0;
+    m0.at(1, 1) = 4.0;
+
+    minalg::Matrix m1(3, 6);
+    m1 = std::move(m0);
+    EXPECT_EQ(m0.rows(), 0);
+    EXPECT_EQ(m1.rows(), dim);
+    EXPECT_EQ(m0.columns(), 0);
+    EXPECT_EQ(m1.columns(), dim);
+    EXPECT_DOUBLE_EQ(m1.get(0, 0), 1.0);
+    EXPECT_DOUBLE_EQ(m1.get(0, 1), 2.0);
+    EXPECT_DOUBLE_EQ(m1.get(1, 0), 3.0);
+    EXPECT_DOUBLE_EQ(m1.get(1, 1), 4.0); 
 }
 
 TEST(MatrixTest, SetAndGet)

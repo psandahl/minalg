@@ -204,6 +204,22 @@ public:
     */
     static Matrix transpose(const Matrix& m);
 
+    /**
+     * @brief Multiply two matrices.
+     * @param m0 left input matrix.
+     * @param m1 right input matrix.
+     * @param m2 multiplicated matrix.
+    */
+    static void multiply(const Matrix& m0, const Matrix& m1, Matrix& m2);
+
+    /**
+     * @brief Multiply two matrices.
+     * @param m0 left input matrix.
+     * @param m1 right input matrix.
+     * @return multiplicated matrix.
+    */
+    static Matrix multiply(const Matrix& m0, const Matrix& m1);
+
 private:
     std::size_t linear(std::size_t row, std::size_t column) const {
         return row * columns() + column;

@@ -164,7 +164,7 @@ void Matrix::transpose(const Matrix& m0, Matrix& m1)
 
     for (std::size_t i = 0; i < columns0; ++i) {
         for (std::size_t j = 0; j < rows0; ++j) {
-            m1.at(i, j) = m0.get(j, i);
+            m1.get(i, j) = m0.get(j, i);
         }
     }
 }
@@ -175,6 +175,46 @@ Matrix Matrix::transpose(const Matrix& m)
     transpose(m, m1);
 
     return m1;
+}
+
+static double inner_product(const Matrix& m0, const Matrix& m1,
+                            std::size_t row_m0, std::size_t col_m1, 
+                            std::size_t len)
+{    
+    double sum = 0.0;
+    for (std::size_t i = 0; i < len; ++i) {
+        sum += m0.get(row_m0, i) * m1.get(i, col_m1);
+    }
+
+    return sum;
+}
+
+void Matrix::multiply(const Matrix& m0, const Matrix& m1, Matrix& m2)
+{
+    const auto [rows0, columns0] = m0.shape();
+    const auto [rows1, columns1] = m1.shape();
+    const auto [rows2, columns2] = m2.shape();
+    if (columns0 != rows1) {
+        throw std::invalid_argument("m0 and m1 does not match for multiplication");
+    }
+    if (rows2 != rows0 || columns2 != columns1) {
+        throw std::invalid_argument("m2 does not match m0 and m1 for multiplication");
+    }
+
+    const std::size_t len = columns0;
+    for (std::size_t row = 0; row < rows2; ++row) {        
+        for (std::size_t column = 0; column < columns2; ++column) {
+            m2.get(row, column) = inner_product(m0, m1, row, column, len);
+        }
+    }
+}
+    
+Matrix Matrix::multiply(const Matrix& m0, const Matrix& m1)
+{
+    Matrix m2(m0.rows(), m1.columns());
+    multiply(m0, m1, m2);
+
+    return m2;
 }
 
 }

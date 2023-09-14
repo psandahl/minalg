@@ -12,6 +12,7 @@ add_executable(
   matrix_test.cpp
 )
 target_compile_features(minalg_test PRIVATE cxx_std_17)
+target_compile_options(minalg_test PRIVATE -Werror -Wall -Wextra)
 
 target_link_libraries(
   minalg_test

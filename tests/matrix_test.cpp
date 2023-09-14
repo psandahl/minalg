@@ -229,3 +229,65 @@ TEST(MatrixTest, InvalidTranspose)
 
     EXPECT_THROW(minalg::Matrix::transpose(m0, m1), std::invalid_argument);
 }
+
+TEST(MatrixTest, DotProduct)
+{
+    minalg::Matrix m({1.0, 2.0, 3.0}); // Column matrix.
+    minalg::Matrix m1(minalg::Matrix::multiply(m.transpose(), m));
+
+    EXPECT_EQ(m1.rows(), 1);
+    EXPECT_EQ(m1.columns(), 1);
+
+    const double ip = 1. * 1. + 2. * 2. + 3. * 3.;
+    EXPECT_DOUBLE_EQ(m1.at(0, 0), ip);
+}
+
+TEST(MatrixTest, MulEye)
+{
+    minalg::Matrix m(minalg::Matrix::eye(5));
+    minalg::Matrix m1(minalg::Matrix::multiply(m, m));
+
+    EXPECT_EQ(m1.rows(), 5);
+    EXPECT_EQ(m1.columns(), 5);
+
+    std::vector<double> diag(m1.diag());
+    EXPECT_DOUBLE_EQ(diag[0], 1.0);
+    EXPECT_DOUBLE_EQ(diag[1], 1.0);
+    EXPECT_DOUBLE_EQ(diag[2], 1.0);
+    EXPECT_DOUBLE_EQ(diag[3], 1.0);
+    EXPECT_DOUBLE_EQ(diag[4], 1.0);
+}
+
+TEST(MatrixTest, MatSqr)
+{
+    minalg::Matrix m({1.0, 2.0, 3.0, 4.0});
+    m.reshaped({2, 2});
+
+    minalg::Matrix m1(minalg::Matrix::multiply(m, m));
+
+    EXPECT_EQ(m1.rows(), 2);
+    EXPECT_EQ(m1.columns(), 2);
+
+    EXPECT_DOUBLE_EQ(m1.at(0, 0), 1. * 1. + 2. * 3.);
+    EXPECT_DOUBLE_EQ(m1.at(0, 1), 1. * 2. + 2. * 4.);
+    EXPECT_DOUBLE_EQ(m1.at(1, 0), 3. * 1. + 4. * 3.);
+    EXPECT_DOUBLE_EQ(m1.at(1, 1), 3. * 2. + 4. * 4.);
+}
+
+TEST(MatrixTest, InvalidMultiplication1)
+{
+    minalg::Matrix m0(3, 4);
+    minalg::Matrix m1(2, 1);
+    minalg::Matrix m2(3, 1);
+
+    EXPECT_THROW(minalg::Matrix::multiply(m0, m1, m2), std::invalid_argument);
+}
+
+TEST(MatrixTest, InvalidMultiplication2)
+{
+    minalg::Matrix m0(3, 4);
+    minalg::Matrix m1(4, 1);
+    minalg::Matrix m2(3, 2);
+
+    EXPECT_THROW(minalg::Matrix::multiply(m0, m1, m2), std::invalid_argument);
+}

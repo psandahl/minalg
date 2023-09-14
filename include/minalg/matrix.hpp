@@ -92,6 +92,19 @@ public:
     bool is_square() const { return rows() == columns(); }
 
     /**
+     * @brief Non range checked access to matrix element.
+     * @param row the row.
+     * @param column the column.
+     * @return reference to the requested element.
+    */
+    double& get(std::size_t row, std::size_t column) { 
+        return _data[linear(row, column)];
+    }
+    const double& get(std::size_t row, std::size_t column) const { 
+        return _data[linear(row, column)];
+    }
+
+    /**
      * @brief Range checked access to matrix element.
      * @param row the row.
      * @param column the column.
@@ -110,20 +123,7 @@ public:
         }
 
         return get(row, column);
-    }
-    
-    /**
-     * @brief Non range checked access to matrix element.
-     * @param row the row.
-     * @param column the column.
-     * @return reference to the requested element.
-    */
-    double& get(std::size_t row, std::size_t column) { 
-        return _data[linear(row, column)];
-    }
-    const double& get(std::size_t row, std::size_t column) const { 
-        return _data[linear(row, column)];
-    }
+    }        
 
     /**
      * @brief Extract the diagonal values.

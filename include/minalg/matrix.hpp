@@ -21,6 +21,14 @@ public:
     Matrix(std::size_t rows, std::size_t columns);
 
     /**
+     * @brief Create a zero initialized matrix with given shape.
+     * @param shape the shape.     
+    */
+    Matrix(const std::tuple<std::size_t, std::size_t>& shape):
+        Matrix(std::get<0>(shape), std::get<1>(shape))
+    {}
+
+    /**
      * @brief Create a column matrix from a vector.
      * @param vec the data vector.
     */

@@ -1,4 +1,4 @@
-#include "minalg/matrix.hpp"
+#include <minalg/matrix.hpp>
 
 #include <cstddef>
 #include <memory>

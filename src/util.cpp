@@ -14,4 +14,14 @@ double inner_product(const Matrix& m0, const Matrix& m1,
     return sum;
 }
 
+std::vector<std::size_t> index_vector(std::size_t indices)
+{
+    std::vector<std::size_t> vec(indices);
+    for (std::size_t i = 0; i < indices; ++i) {
+        vec[i] = i;
+    }
+
+    return vec;
+}
+
 }

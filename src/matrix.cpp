@@ -206,4 +206,35 @@ Matrix Matrix::multiply(const Matrix& m0, const Matrix& m1)
     return m2;
 }
 
+void Matrix::hconcat(const Matrix& m0, const Matrix& m1, Matrix& m2)
+{
+    const auto [rows0, columns0] = m0.shape();
+    const auto [rows1, columns1] = m1.shape();
+    const auto [rows2, columns2] = m2.shape();
+    if (rows0 != rows1 || rows1 != rows2) {
+        throw std::invalid_argument("m0, m1 and m2 does not match for horizontal concat");
+    }
+    if (columns2 != columns0 + columns1) {
+        throw std::invalid_argument("m0, m1 and m2 does not match for horizontal concat");
+    }
+
+    for (std::size_t row = 0; row < rows0; ++row) {
+        double *dst = &m2.at(row, 0);
+        const double *src = &m0.get(row, 0);
+        std::memcpy(dst, src, columns0 * sizeof(double));
+
+        dst += columns0;
+        src = &m1.get(row, 0);
+        std::memcpy(dst, src, columns1 * sizeof(double));
+    }
+}
+
+Matrix Matrix::hconcat(const Matrix& m0, const Matrix& m1)
+{
+    Matrix m2(m0.rows(), m0.columns() + m1.columns());
+    hconcat(m0, m1, m2);
+
+    return m2;
+}
+
 }

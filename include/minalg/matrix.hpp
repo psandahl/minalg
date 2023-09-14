@@ -228,6 +228,13 @@ public:
     */
     static Matrix multiply(const Matrix& m0, const Matrix& m1);
 
+    /**
+     * @brief Horizontal concat of two matrices.
+     * 
+    */
+    static void hconcat(const Matrix& m0, const Matrix& m1, Matrix& m2);
+    static Matrix hconcat(const Matrix& m0, const Matrix& m1);
+
 private:
     std::size_t linear(std::size_t row, std::size_t column) const {
         return row * columns() + column;

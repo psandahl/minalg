@@ -291,3 +291,40 @@ TEST(MatrixTest, InvalidMultiplication2)
 
     EXPECT_THROW(minalg::Matrix::multiply(m0, m1, m2), std::invalid_argument);
 }
+
+TEST(MatrixTest, ValidHconcat)
+{
+    minalg::Matrix m0({1.0, 2.0, 3.0, 4.0});
+    m0.reshaped({2, 2});
+
+    minalg::Matrix m1(std::vector<double>({5.0, 6.0}));
+
+    minalg::Matrix m2(minalg::Matrix::hconcat(m0, m1));
+    EXPECT_EQ(m2.rows(), m0.rows());
+    EXPECT_EQ(m2.columns(), m0.columns() + m1.columns());
+
+    EXPECT_DOUBLE_EQ(m2.at(0, 0), 1.0);
+    EXPECT_DOUBLE_EQ(m2.at(0, 1), 2.0);
+    EXPECT_DOUBLE_EQ(m2.at(0, 2), 5.0);
+    EXPECT_DOUBLE_EQ(m2.at(1, 0), 3.0);
+    EXPECT_DOUBLE_EQ(m2.at(1, 1), 4.0);
+    EXPECT_DOUBLE_EQ(m2.at(1, 2), 6.0);
+}
+
+TEST(MatrixTest, InvalidHconcat1)
+{
+    minalg::Matrix m0(3, 3);
+    minalg::Matrix m1(2, 3);
+    minalg::Matrix m2(3, 3);
+
+    EXPECT_THROW(minalg::Matrix::hconcat(m0, m1, m2), std::invalid_argument);
+}
+
+TEST(MatrixTest, InvalidHconcat2)
+{
+    minalg::Matrix m0(3, 3);
+    minalg::Matrix m1(3, 3);
+    minalg::Matrix m2(2, 3);
+
+    EXPECT_THROW(minalg::Matrix::hconcat(m0, m1, m2), std::invalid_argument);
+}

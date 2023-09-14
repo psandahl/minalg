@@ -9,6 +9,7 @@ enable_testing()
 
 add_executable(
   minalg_test
+  linear_test.cpp
   matrix_test.cpp
 )
 target_compile_features(minalg_test PRIVATE cxx_std_17)

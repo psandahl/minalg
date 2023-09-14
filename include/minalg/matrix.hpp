@@ -142,9 +142,11 @@ public:
     /**
      * @brief Reshape this matrix.
      * @param shape new shape.
+     * @return this matrix.
     */
-    void reshaped(const std::tuple<std::size_t, std::size_t>& shape) {
+    Matrix& reshaped(const std::tuple<std::size_t, std::size_t>& shape) {
         reshape(*this, shape);
+        return *this;
     }
 
     /**

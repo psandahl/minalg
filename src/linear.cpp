@@ -2,6 +2,7 @@
 #include "util.hpp"
 
 #include <algorithm>
+#include <cmath>
 #include <cstddef>
 #include <limits>
 #include <stdexcept>
@@ -11,16 +12,15 @@
 
 namespace minalg {
 
-#if 0
 static std::size_t find_pivot_index(std::size_t diag, 
                                    const Matrix& m, 
                                    const std::vector<std::size_t>& rows)
 {
     std::size_t max_row = diag;
-    double max_val = std::numeric_limits<double>::min();
+    double max_val = 0.0;
 
     for (std::size_t row = diag; row < rows.size(); ++row) {
-        const double val = m.at(rows[row], diag);
+        const double val = std::fabs(m.at(rows[row], diag));
         if (val > max_val) {
             max_row = row;
             max_val = val;
@@ -29,7 +29,6 @@ static std::size_t find_pivot_index(std::size_t diag,
 
     return max_row;
 }
-#endif
 
 static void multiply_row(Matrix& m, std::size_t row, double value)
 {
@@ -66,7 +65,10 @@ Matrix solve(const Matrix& A, const Matrix& b)
 
     // Iterate through the augmented matrix to get an upper diagonal matrix.
     for (std::size_t diag = 0; diag < rows.size(); ++diag) {
-        // TBD. Swap order.
+        // Find the pivot index - and swap the indices. The row with the
+        // greatest absolute value will now be available in rows[diag].
+        const std::size_t pivot_index = find_pivot_index(diag, m, rows);
+        std::swap(rows[pivot_index], rows[diag]);
 
         // Read pivot value.
         const double pivot_value = m.at(rows[diag], diag);
@@ -91,41 +93,6 @@ Matrix solve(const Matrix& A, const Matrix& b)
         std::cout << "diag=" << diag << ", pivot_value=" << pivot_value << std::endl;
         std::cout << "m=\n" << m.info() << std::endl;
     }
-
-#if 0
-    for (std::size_t diag = 0; diag < m.rows(); ++diag) {
-        // Find the pivot index - and swap the indices.
-        const std::size_t pivot_index = find_pivot_index(diag, m, rows);
-        std::swap(rows[pivot_index], rows[diag]);
-
-        // Read the pivot value.
-        const double pivot_value = m.at(rows[diag], diag);
-        if (near_zero(pivot_value)) {
-            throw std::out_of_range("Singular matrix");
-        }
-
-        // Normalize the pivot row.
-        multiply_row(m, rows[diag], 1.0 / pivot_value);
-
-        // Use the normalized pivot row to eliminate the rows below.
-        for (std::size_t elim = diag + 1; elim < m.rows(); ++elim) {
-            // Read the value for the cell to eliminate ...
-            const double value = m.at(rows[elim], diag);
-
-            // ... and use the value to make a linear combination that eliminates it.
-            linearly_combine_rows(m, rows[elim], rows[diag], -value);            
-        }
-
-        std::cout << "diag=" << diag << ", pivot_index=" << pivot_index 
-                  << ", pivot_value=" << pivot_value << std::endl;
-        std::cout << "m=\n" << m.info() << std::endl;
-    
-        std::cout << "rows:" << std::endl;
-        for (std::size_t row : rows) {
-            std::cout << "- " << row << std::endl;
-        }        
-    }
-#endif
 
     // Perform back-substitution to get the solutions.
     Matrix x(b.shape());

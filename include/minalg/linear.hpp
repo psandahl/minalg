@@ -13,4 +13,10 @@ namespace linear {
 */
 matrix solve(const matrix& A, const matrix& b);
 
+/**
+ * @brief Invert the matrix A.
+ * @return inverted matrix.
+*/
+matrix invert(const matrix& A);
+
 }}

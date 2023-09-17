@@ -301,6 +301,11 @@ inline bool operator == (const matrix& lhs, const matrix& rhs)
     return matrix::equal(lhs, rhs);
 }
 
+inline bool operator != (const matrix& lhs, const matrix& rhs)
+{
+    return !matrix::equal(lhs, rhs);
+}
+
 inline matrix operator * (const matrix& lhs, const matrix& rhs)
 {
     return matrix::multiply(lhs, rhs);

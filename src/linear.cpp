@@ -5,12 +5,14 @@
 #include <cmath>
 #include <cstddef>
 #include <stdexcept>
+#include <cstring>
 #include <vector>
 
 namespace minalg {
 namespace linear {
 
 static matrix gaussian_elimination(const matrix& A, const matrix& b);
+static matrix gauss_jordan_elimination(const matrix& A);
 
 matrix solve(const matrix& A, const matrix& b)
 {
@@ -22,6 +24,15 @@ matrix solve(const matrix& A, const matrix& b)
     }
 
     return gaussian_elimination(A, b);
+}
+
+matrix invert(const matrix& A)
+{
+    if (!A.is_square()) {
+        throw std::invalid_argument("matrix must be square");
+    }
+
+    return gauss_jordan_elimination(A);
 }
 
 matrix gaussian_elimination(const matrix& A, const matrix& b)
@@ -81,6 +92,56 @@ matrix gaussian_elimination(const matrix& A, const matrix& b)
     }
 
     return x;
+}
+
+matrix gauss_jordan_elimination(const matrix& A)
+{
+    // Invert the matrix A through Gauss Jordan elimination.
+    //
+    // Augmented matrix.
+    minalg::matrix m(minalg::matrix::hconcat(A, minalg::matrix::eye(A.rows())));
+
+    // Vector with row indices.
+    std::vector<std::size_t> rows(index_vector(A.rows()));
+
+    // Iterate through the diagonal of the A part of the augmented matrix.
+    for (std::size_t diag = 0; diag < rows.size(); ++diag) {
+        // Find the pivot index - and swap the indices. The row with the
+        // greatest absolute value will now be available in rows[diag].
+        const std::size_t pivot_row_index = find_pivot_row_index(diag, m, rows);
+        std::swap(rows[pivot_row_index], rows[diag]);
+
+        // Read pivot value.
+        const double pivot_value = m.at(rows[diag], diag);
+        if (near_zero(pivot_value)) {
+            throw std::out_of_range("Singular matrix");
+        }
+
+        // Normalize pivot row using pivot value to simplify further
+        // calculations.        
+        m.scale_row(rows[diag], 1. / pivot_value);
+
+        // Eliminate rows above and below.
+        for (std::size_t elim = 0; elim < rows.size(); ++elim) {
+            if (rows[elim] != rows[diag]) {                
+                // Read value for the cell to eliminate ...
+                const double elim_value = m.get(rows[elim], diag);
+
+                // ... and use the value to make a linear combination that
+                // eliminates the cell.
+                m.linearly_combine(rows[diag], -elim_value, rows[elim]);
+            }
+        }        
+    }
+
+    // Fill in the matrix Ainv.
+    minalg::matrix Ainv(A.shape());
+    for (std::size_t row = 0; row < A.rows(); ++row) {
+        std::memcpy(&Ainv.at(row, 0), &m.at(rows[row], A.columns()), 
+                    A.columns() * sizeof(double));
+    }
+
+    return Ainv;
 }
 
 }}

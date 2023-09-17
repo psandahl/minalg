@@ -74,3 +74,28 @@ TEST(LinearTest, InvalidSolve2)
     const minalg::matrix b(std::vector<double>({1, 2, 3}));
     EXPECT_THROW(minalg::linear::solve(A, b), std::invalid_argument);
 }
+
+TEST(LinearTest, Invert1)
+{
+    const minalg::matrix A(minalg::matrix({1, 2, 3, 0, 1, 4, 5, 6, 0}).reshape({3, 3}));
+
+    const minalg::matrix Ainv(minalg::linear::invert(A));
+    EXPECT_EQ(Ainv.rows(), A.rows());
+    EXPECT_EQ(Ainv.columns(), A.columns());
+
+    // Hardcoded values.
+    EXPECT_NEAR(Ainv.at(0, 0), -24, 1e-09);
+    EXPECT_NEAR(Ainv.at(0, 1), 18, 1e-09);
+    EXPECT_NEAR(Ainv.at(0, 2), 5, 1e-09);
+
+    EXPECT_NEAR(Ainv.at(1, 0), 20, 1e-09);
+    EXPECT_NEAR(Ainv.at(1, 1), -15, 1e-09);
+    EXPECT_NEAR(Ainv.at(1, 2), -4, 1e-09);
+
+    EXPECT_NEAR(Ainv.at(2, 0), -5, 1e-09);
+    EXPECT_NEAR(Ainv.at(2, 1), 4, 1e-09);
+    EXPECT_NEAR(Ainv.at(2, 2), 1, 1e-09);
+
+    // Check Ainv * A == I.
+    EXPECT_TRUE(Ainv * A == minalg::matrix::eye(A.rows()));
+}

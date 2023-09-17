@@ -10,7 +10,7 @@ TEST(LinearTest, Solve1)
     const minalg::matrix A(minalg::matrix({-3, 2, -1, 6, -6, 7, 3, -4, 4}).reshape({3, 3}));
     const minalg::matrix b({-1, -7, -6});
     
-    const minalg::matrix x(minalg::solve(A, b));
+    const minalg::matrix x(minalg::linear::solve(A, b));
     EXPECT_EQ(x.rows(), 3);
     EXPECT_EQ(x.columns(), 1);
     EXPECT_DOUBLE_EQ(x.at(0, 0), 2.0);
@@ -39,7 +39,7 @@ TEST(LinearTest, Solve2)
 
     const minalg::matrix A(minalg::matrix(data).reshape({5, 5}));
     const minalg::matrix b({-16, -55, 14, 29, 67});
-    const minalg::matrix x(minalg::solve(A, b));
+    const minalg::matrix x(minalg::linear::solve(A, b));
     EXPECT_EQ(x.rows(), 5);
     EXPECT_EQ(x.columns(), 1);
     EXPECT_DOUBLE_EQ(x.at(0, 0), 5.0);
@@ -65,12 +65,12 @@ TEST(LinearTest, InvalidSolve1)
 {
     const minalg::matrix A(minalg::matrix({0, 1, 0, -1}).reshape({2, 2}));
     const minalg::matrix b(std::vector<double>({2, 3}));
-    EXPECT_THROW(minalg::solve(A, b), std::out_of_range);
+    EXPECT_THROW(minalg::linear::solve(A, b), std::out_of_range);
 }
 
 TEST(LinearTest, InvalidSolve2)
 {
     const minalg::matrix A(minalg::matrix({1, 2, 3, 4, 5, 6}).reshape({3, 2}));
     const minalg::matrix b(std::vector<double>({1, 2, 3}));
-    EXPECT_THROW(minalg::solve(A, b), std::invalid_argument);
+    EXPECT_THROW(minalg::linear::solve(A, b), std::invalid_argument);
 }

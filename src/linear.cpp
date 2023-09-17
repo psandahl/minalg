@@ -8,6 +8,7 @@
 #include <vector>
 
 namespace minalg {
+namespace linear {
 
 static matrix gaussian_elimination(const matrix& A, const matrix& b);
 
@@ -82,4 +83,4 @@ matrix gaussian_elimination(const matrix& A, const matrix& b)
     return x;
 }
 
-}
+}}

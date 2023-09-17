@@ -3,6 +3,7 @@
 #include <minalg/matrix.hpp>
 
 namespace minalg {
+namespace linear {
 
 /**
  * @brief Solve the linear system Ax=b.
@@ -12,4 +13,4 @@ namespace minalg {
 */
 matrix solve(const matrix& A, const matrix& b);
 
-}
+}}

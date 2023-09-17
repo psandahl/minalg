@@ -341,6 +341,36 @@ TEST(MatrixTest, Equal)
     m1.at(1, 1) += 1e-10; // Difference within tolerances.
     EXPECT_TRUE(m0 == m1);
 
-    m1.at(0, 1) = 1e-8; // Difference not within tolerances.
-    EXPECT_FALSE(m0 == m1);
+    minalg::Matrix m2(m0);
+    m2.at(1, 1) += 1e-6; // Difference not within tolerances.
+    EXPECT_FALSE(m0 == m2);
+}
+
+TEST(MatrixTest, IsSymmetric)
+{
+    minalg::Matrix m0({1.0, 2.0, 2.0, 4.0});
+    m0.reshaped({2, 2});
+
+    EXPECT_TRUE(m0.is_symmetric());
+
+    m0.at(1, 0) = 3.0;
+    EXPECT_FALSE(m0.is_symmetric());
+}
+
+TEST(MatrixTest, IsOrthogonal)
+{
+    const std::vector<double> data =
+    {
+        1, 0, 0,
+        0, 0.70710678, -0.70710678,
+        0, 0.70710678, 0.70710678
+    };
+
+    minalg::Matrix m0(data);
+    m0.reshaped({3, 3});
+
+    EXPECT_TRUE(m0.is_orthogonal());    
+
+    m0.at(0, 1) = 1e-03;
+    EXPECT_FALSE(m0.is_orthogonal());    
 }

@@ -67,11 +67,6 @@ public:
     */
     virtual ~Matrix();
 
-    bool operator == (const Matrix& rhs) const
-    {
-        return equal(*this, rhs);
-    }
-
     /**
      * @brief Get the number of rows.
      * @return the number of rows.
@@ -99,10 +94,26 @@ public:
     std::size_t size() const { return rows() * columns(); }
 
     /**
-     * @brief Check whether a matrix is square.
+     * @brief Check whether the matrix is square.
      * @return boolean value.
     */
     bool is_square() const { return rows() == columns(); }
+
+    /**
+     * @brief Check whether the matrix is symmetric.
+     * @return boolean value.
+    */
+    bool is_symmetric() const { 
+        return is_square() && equal(*this, transpose());    
+    }
+
+    /**
+     * @brief Check whether the matrix is orthogonal.
+     * @return boolean value.
+    */
+    bool is_orthogonal() const {
+        return is_square() && equal(multiply(*this, transpose()), eye(rows()));
+    }
 
     /**
      * @brief Non range checked access to matrix element.
@@ -284,5 +295,15 @@ private:
     std::size_t _columns;
     double *_data;
 };
+
+inline bool operator == (const Matrix& lhs, const Matrix& rhs)
+{
+    return Matrix::equal(lhs, rhs);
+}
+
+inline Matrix operator * (const Matrix& lhs, const Matrix& rhs)
+{
+    return Matrix::multiply(lhs, rhs);
+}
 
 }

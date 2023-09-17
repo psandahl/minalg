@@ -24,4 +24,22 @@ std::vector<std::size_t> index_vector(std::size_t indices)
     return vec;
 }
 
+std::size_t find_pivot_row_index(std::size_t diag, 
+                                 const Matrix& m, 
+                                 const std::vector<std::size_t>& rows)
+{
+    std::size_t max_row = diag;
+    double max_val = 0.0;
+
+    for (std::size_t row = diag; row < rows.size(); ++row) {
+        const double val = std::fabs(m.at(rows[row], diag));
+        if (val > max_val) {
+            max_row = row;
+            max_val = val;
+        }
+    }
+
+    return max_row;
+}
+
 }

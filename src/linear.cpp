@@ -4,29 +4,12 @@
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
-#include <limits>
 #include <stdexcept>
 #include <vector>
 
 namespace minalg {
 
-static std::size_t find_pivot_index(std::size_t diag, 
-                                   const Matrix& m, 
-                                   const std::vector<std::size_t>& rows)
-{
-    std::size_t max_row = diag;
-    double max_val = 0.0;
-
-    for (std::size_t row = diag; row < rows.size(); ++row) {
-        const double val = std::fabs(m.at(rows[row], diag));
-        if (val > max_val) {
-            max_row = row;
-            max_val = val;
-        }
-    }
-
-    return max_row;
-}
+static Matrix gaussian_elimination(const Matrix& A, const Matrix& b);
 
 Matrix solve(const Matrix& A, const Matrix& b)
 {
@@ -37,6 +20,11 @@ Matrix solve(const Matrix& A, const Matrix& b)
         throw std::invalid_argument("Matrix b must be column matrix with same number of rows as A");
     }
 
+    return gaussian_elimination(A, b);
+}
+
+Matrix gaussian_elimination(const Matrix& A, const Matrix& b)
+{
     // Solve the linear system through Gaussian elimination.
     //
     // Augmented matrix.
@@ -49,8 +37,8 @@ Matrix solve(const Matrix& A, const Matrix& b)
     for (std::size_t diag = 0; diag < rows.size(); ++diag) {
         // Find the pivot index - and swap the indices. The row with the
         // greatest absolute value will now be available in rows[diag].
-        const std::size_t pivot_index = find_pivot_index(diag, m, rows);
-        std::swap(rows[pivot_index], rows[diag]);
+        const std::size_t pivot_row_index = find_pivot_row_index(diag, m, rows);
+        std::swap(rows[pivot_row_index], rows[diag]);
 
         // Read pivot value.
         const double pivot_value = m.at(rows[diag], diag);
@@ -65,7 +53,7 @@ Matrix solve(const Matrix& A, const Matrix& b)
         // Eliminate rows below.
         for (std::size_t elim = diag + 1; elim < rows.size(); ++elim) {
             // Read value for the cell to eliminate ...
-            const double elim_value = m.at(rows[elim], diag);
+            const double elim_value = m.get(rows[elim], diag);
 
             // ... and use the value to make a linear combination that
             // eliminates the cell.
@@ -84,7 +72,7 @@ Matrix solve(const Matrix& A, const Matrix& b)
 
         // Back-substitute.
         for (std::size_t col = row + 1; col < m.columns() - 1; ++col) {
-            const double term = -m.get(rows[row], col) * x.at(col, 0);
+            const double term = -m.get(rows[row], col) * x.get(col, 0);
             value += term;            
         }
 

@@ -30,6 +30,18 @@ double inner_product(const Matrix& m0, const Matrix& m1,
 std::vector<std::size_t> index_vector(std::size_t indices);
 
 /**
+ * @brief Find the row index with biggest absolute value
+ * in the given column.
+ * @param diag the current diagonal position (both row and col).
+ * @param m the matrix to search within.
+ * @param rows the row indices vector.
+ * @return the row index with biggest absolute value.
+*/
+std::size_t find_pivot_row_index(std::size_t diag, 
+                                 const Matrix& m, 
+                                 const std::vector<std::size_t>& rows);
+
+/**
  * @brief Check if a value is close to zero
  * @param value the value to check.
  * @return boolean value.

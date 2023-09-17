@@ -328,3 +328,19 @@ TEST(MatrixTest, InvalidHconcat2)
 
     EXPECT_THROW(minalg::Matrix::hconcat(m0, m1, m2), std::invalid_argument);
 }
+
+TEST(MatrixTest, Equal)
+{
+    minalg::Matrix m0({1.0, 2.0, 3.0, 4.0});
+    m0.reshaped({2, 2});
+    EXPECT_TRUE(m0 == m0);
+
+    minalg::Matrix m1(m0);
+    EXPECT_TRUE(m0 == m1);
+
+    m1.at(1, 1) += 1e-10; // Difference within tolerances.
+    EXPECT_TRUE(m0 == m1);
+
+    m1.at(0, 1) = 1e-8; // Difference not within tolerances.
+    EXPECT_FALSE(m0 == m1);
+}

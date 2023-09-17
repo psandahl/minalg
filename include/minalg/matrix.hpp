@@ -67,6 +67,11 @@ public:
     */
     virtual ~Matrix();
 
+    bool operator == (const Matrix& rhs) const
+    {
+        return equal(*this, rhs);
+    }
+
     /**
      * @brief Get the number of rows.
      * @return the number of rows.
@@ -248,10 +253,27 @@ public:
 
     /**
      * @brief Horizontal concat of two matrices.
-     * 
+     * @param m0 left input matrix.
+     * @param m1 right input matrix.
+     * @param m2 concatenated matrix.
     */
     static void hconcat(const Matrix& m0, const Matrix& m1, Matrix& m2);
+
+    /**
+     * @brief Horizontal concat of two matrices.
+     * @param m0 left input matrix.
+     * @param m1 right input matrix.
+     * @return concatenated matrix.
+    */
     static Matrix hconcat(const Matrix& m0, const Matrix& m1);
+
+    /**
+     * @brief Check whether two matrices are equal.
+     * @param m0 left input matrix.
+     * @param m1 right input matrix.
+     * @return true if equal, false otherwise.
+    */
+    static bool equal(const Matrix& m0, const Matrix& m1);
 
 private:
     std::size_t linear(std::size_t row, std::size_t column) const {

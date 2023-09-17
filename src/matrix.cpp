@@ -255,4 +255,26 @@ Matrix Matrix::hconcat(const Matrix& m0, const Matrix& m1)
     return m2;
 }
 
+bool Matrix::equal(const Matrix& m0, const Matrix& m1)
+{
+    if (&m0 == &m1) {
+        return true;
+    }
+
+    if (m0.shape() == m1.shape()) {
+        for (std::size_t row = 0; row < m0.rows(); ++row) {
+            for (std::size_t col = 0; col < m0.columns(); ++col) {
+                const double diff = m0.get(row, col) - m1.get(row, col);
+                if (!near_zero(diff)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    } else {
+        return false;
+    }
+}
+
 }

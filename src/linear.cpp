@@ -9,26 +9,26 @@
 
 namespace minalg {
 
-static Matrix gaussian_elimination(const Matrix& A, const Matrix& b);
+static matrix gaussian_elimination(const matrix& A, const matrix& b);
 
-Matrix solve(const Matrix& A, const Matrix& b)
+matrix solve(const matrix& A, const matrix& b)
 {
     if (!A.is_square()) {
-        throw std::invalid_argument("Matrix A must be square");
+        throw std::invalid_argument("matrix A must be square");
     }
     if (b.columns() != 1 || b.rows() != A.rows()) {
-        throw std::invalid_argument("Matrix b must be column matrix with same number of rows as A");
+        throw std::invalid_argument("matrix b must be column matrix with same number of rows as A");
     }
 
     return gaussian_elimination(A, b);
 }
 
-Matrix gaussian_elimination(const Matrix& A, const Matrix& b)
+matrix gaussian_elimination(const matrix& A, const matrix& b)
 {
     // Solve the linear system through Gaussian elimination.
     //
     // Augmented matrix.
-    minalg::Matrix m(minalg::Matrix::hconcat(A, b));
+    minalg::matrix m(minalg::matrix::hconcat(A, b));
 
     // Vector with row indices.
     std::vector<std::size_t> rows(index_vector(A.rows()));
@@ -62,7 +62,7 @@ Matrix gaussian_elimination(const Matrix& A, const Matrix& b)
     }
 
     // Perform back-substitution to get the solutions.
-    Matrix x(b.shape());
+    matrix x(b.shape());
 
     for (std::size_t i = x.rows(); i > 0; --i) {
         const std::size_t row = i - 1;

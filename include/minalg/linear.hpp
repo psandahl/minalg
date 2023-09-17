@@ -10,6 +10,6 @@ namespace minalg {
  * @param b matrix b.
  * @return matrix x.
 */
-Matrix solve(const Matrix& A, const Matrix& b);
+matrix solve(const matrix& A, const matrix& b);
 
 }

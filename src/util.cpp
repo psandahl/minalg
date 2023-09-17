@@ -4,7 +4,7 @@
 
 namespace minalg {
 
-double inner_product(const Matrix& m0, const Matrix& m1,
+double inner_product(const matrix& m0, const matrix& m1,
                      std::size_t row_m0, std::size_t col_m1, 
                      std::size_t len)
 {    
@@ -27,7 +27,7 @@ std::vector<std::size_t> index_vector(std::size_t indices)
 }
 
 std::size_t find_pivot_row_index(std::size_t diag, 
-                                 const Matrix& m, 
+                                 const matrix& m, 
                                  const std::vector<std::size_t>& rows)
 {
     std::size_t max_row = diag;

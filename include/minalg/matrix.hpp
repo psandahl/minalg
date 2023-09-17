@@ -11,61 +11,61 @@ namespace minalg {
 /**
 * @brief Simple and straightforward matrix class. Doubles only.
 */
-class Matrix {
+class matrix {
 public:
     /**
      * @brief Create a zero initialized matrix with given dimensions.
      * @param rows the number of rows.
      * @param columns the number of columns.
     */
-    Matrix(std::size_t rows, std::size_t columns);
+    matrix(std::size_t rows, std::size_t columns);
 
     /**
      * @brief Create a zero initialized matrix with given shape.
      * @param shape the shape.     
     */
-    Matrix(const std::tuple<std::size_t, std::size_t>& shape):
-        Matrix(std::get<0>(shape), std::get<1>(shape))
+    matrix(const std::tuple<std::size_t, std::size_t>& shape):
+        matrix(std::get<0>(shape), std::get<1>(shape))
     {}
 
     /**
      * @brief Create a column matrix from a vector.
      * @param vec the data vector.
     */
-    Matrix(const std::vector<double>& vec);
+    matrix(const std::vector<double>& vec);
 
     /**
      * @brief Copy constructor.
-     * @param other the Matrix to copy.     
+     * @param other the matrix to copy.     
     */
-    Matrix(const Matrix& other);
+    matrix(const matrix& other);
 
     /**
      * @brief Copy assignment operator.
-     * @param other the Matrix to copy.
+     * @param other the matrix to copy.
      * @return this matrix.
     */
-    Matrix& operator = (const Matrix& other);
+    matrix& operator = (const matrix& other);
 
     /**
      * @brief Move constructor.
-     * @param other the Matrix to move.   
+     * @param other the matrix to move.   
     */
-    Matrix(Matrix&& other);
+    matrix(matrix&& other);
 
     /**
      * @brief Move assignment operator.
-     * @param other the Matrix to move.
+     * @param other the matrix to move.
      * @return this matrix.
     */
-    Matrix& operator = (Matrix&& other);
+    matrix& operator = (matrix&& other);
 
-    Matrix() = delete;
+    matrix() = delete;
 
     /**
      * @brief Destruct the matrix.
     */
-    virtual ~Matrix();
+    virtual ~matrix();
 
     /**
      * @brief Get the number of rows.
@@ -160,7 +160,7 @@ public:
      * @param shape new shape.
      * @return this matrix.
     */
-    Matrix& reshaped(const std::tuple<std::size_t, std::size_t>& shape) {
+    matrix& reshaped(const std::tuple<std::size_t, std::size_t>& shape) {
         reshape(*this, shape);
         return *this;
     }
@@ -170,8 +170,8 @@ public:
      * @param shape new shape.
      * @return reshaped matrix.
     */
-    Matrix reshape(const std::tuple<std::size_t, std::size_t>& shape) const {
-        Matrix m(*this);
+    matrix reshape(const std::tuple<std::size_t, std::size_t>& shape) const {
+        matrix m(*this);
         reshape(m, shape);
 
         return m;
@@ -181,7 +181,7 @@ public:
      * @brief Create a transposed copy of this matrix.
      * @return transposed matrix.
     */
-    Matrix transpose() const { return transpose(*this); }
+    matrix transpose() const { return transpose(*this); }
 
     /**
      * @brief Multiply the given row with a scale factor.
@@ -211,40 +211,40 @@ public:
      * @param dim the matrix dimension.
      * @return the identity matrix.
     */
-    static Matrix eye(std::size_t dim);
+    static matrix eye(std::size_t dim);
 
     /**
      * @brief Create a diagonal matrix.
      * @param dim the values for the diagonal.
      * @return the diagonal matrix.
     */
-    static Matrix diag(const std::vector<double>& vec);
+    static matrix diag(const std::vector<double>& vec);
 
     /**
      * @brief Extract the diagonal values.
      * @return vector with values.
     */
-    static std::vector<double> diag(const Matrix& m);
+    static std::vector<double> diag(const matrix& m);
 
     /**
      * @brief Reshape the matrix to new shape.
      * @param m matrix to reshape.
      * @param shape new shape.
     */
-    static void reshape(Matrix& m, const std::tuple<std::size_t, std::size_t>& shape);
+    static void reshape(matrix& m, const std::tuple<std::size_t, std::size_t>& shape);
 
     /**
      * @brief Transpose m0 into m1.
      * @param m0 matrix to transpose.
      * @param m1 transposed matrix.
     */
-    static void transpose(const Matrix& m0, Matrix& m1);
+    static void transpose(const matrix& m0, matrix& m1);
 
     /**
      * @brief Transpose the matrix.
      * @return transposed matrix.
     */
-    static Matrix transpose(const Matrix& m);
+    static matrix transpose(const matrix& m);
 
     /**
      * @brief Multiply two matrices.
@@ -252,7 +252,7 @@ public:
      * @param m1 right input matrix.
      * @param m2 multiplicated matrix.
     */
-    static void multiply(const Matrix& m0, const Matrix& m1, Matrix& m2);
+    static void multiply(const matrix& m0, const matrix& m1, matrix& m2);
 
     /**
      * @brief Multiply two matrices.
@@ -260,7 +260,7 @@ public:
      * @param m1 right input matrix.
      * @return multiplicated matrix.
     */
-    static Matrix multiply(const Matrix& m0, const Matrix& m1);
+    static matrix multiply(const matrix& m0, const matrix& m1);
 
     /**
      * @brief Horizontal concat of two matrices.
@@ -268,7 +268,7 @@ public:
      * @param m1 right input matrix.
      * @param m2 concatenated matrix.
     */
-    static void hconcat(const Matrix& m0, const Matrix& m1, Matrix& m2);
+    static void hconcat(const matrix& m0, const matrix& m1, matrix& m2);
 
     /**
      * @brief Horizontal concat of two matrices.
@@ -276,7 +276,7 @@ public:
      * @param m1 right input matrix.
      * @return concatenated matrix.
     */
-    static Matrix hconcat(const Matrix& m0, const Matrix& m1);
+    static matrix hconcat(const matrix& m0, const matrix& m1);
 
     /**
      * @brief Check whether two matrices are equal.
@@ -284,7 +284,7 @@ public:
      * @param m1 right input matrix.
      * @return true if equal, false otherwise.
     */
-    static bool equal(const Matrix& m0, const Matrix& m1);
+    static bool equal(const matrix& m0, const matrix& m1);
 
 private:
     std::size_t linear(std::size_t row, std::size_t column) const {
@@ -296,14 +296,14 @@ private:
     double *_data;
 };
 
-inline bool operator == (const Matrix& lhs, const Matrix& rhs)
+inline bool operator == (const matrix& lhs, const matrix& rhs)
 {
-    return Matrix::equal(lhs, rhs);
+    return matrix::equal(lhs, rhs);
 }
 
-inline Matrix operator * (const Matrix& lhs, const Matrix& rhs)
+inline matrix operator * (const matrix& lhs, const matrix& rhs)
 {
-    return Matrix::multiply(lhs, rhs);
+    return matrix::multiply(lhs, rhs);
 }
 
 }

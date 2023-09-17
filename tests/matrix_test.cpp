@@ -7,12 +7,12 @@
 
 #include <gtest/gtest.h>
 
-TEST(MatrixTest, ValidConstruction)
+TEST(matrixTest, ValidConstruction)
 {
     static constexpr std::size_t rows = 6;
     static constexpr std::size_t columns = 3;
 
-    minalg::Matrix m(rows, columns);
+    minalg::matrix m(rows, columns);
     EXPECT_EQ(m.rows(), rows);
     EXPECT_EQ(m.columns(), columns);
     EXPECT_EQ(m.size(), rows * columns);
@@ -22,18 +22,18 @@ TEST(MatrixTest, ValidConstruction)
     EXPECT_EQ(num_columns, columns);
 }
 
-TEST(MatrixTest, InvalidConstruction) 
+TEST(matrixTest, InvalidConstruction) 
 {
-    EXPECT_THROW(minalg::Matrix(0, 0), std::invalid_argument);  
-    EXPECT_THROW(minalg::Matrix(1, 0), std::invalid_argument);  
-    EXPECT_THROW(minalg::Matrix(0, 1), std::invalid_argument);      
+    EXPECT_THROW(minalg::matrix(0, 0), std::invalid_argument);  
+    EXPECT_THROW(minalg::matrix(1, 0), std::invalid_argument);  
+    EXPECT_THROW(minalg::matrix(0, 1), std::invalid_argument);      
 }
 
-TEST(MatrixTest, LiteralConstruction)
+TEST(matrixTest, LiteralConstruction)
 {
     const std::vector<double> vec = { 1.0, 2.0, 3.0, 4.0 };
     
-    minalg::Matrix m(vec);
+    minalg::matrix m(vec);
     EXPECT_EQ(m.rows(), vec.size());
     EXPECT_EQ(m.columns(), 1);
     EXPECT_DOUBLE_EQ(m.at(0, 0), 1.0);
@@ -42,17 +42,17 @@ TEST(MatrixTest, LiteralConstruction)
     EXPECT_DOUBLE_EQ(m.at(3, 0), 4.0);
 }
 
-TEST(MatrixTest, CopyConstruction)
+TEST(matrixTest, CopyConstruction)
 {
     static constexpr std::size_t dim = 2;
 
-    minalg::Matrix m0(dim, dim);
+    minalg::matrix m0(dim, dim);
     m0.at(0, 0) = 1.0;
     m0.at(0, 1) = 2.0;
     m0.at(1, 0) = 3.0;
     m0.at(1, 1) = 4.0;
 
-    minalg::Matrix m1(m0);
+    minalg::matrix m1(m0);
     EXPECT_EQ(m0.rows(), dim);
     EXPECT_EQ(m1.rows(), dim);
     EXPECT_EQ(m0.columns(), dim);
@@ -63,17 +63,17 @@ TEST(MatrixTest, CopyConstruction)
     EXPECT_DOUBLE_EQ(m1.at(1, 1), 4.0);
 }
 
-TEST(MatrixTest, CopyAssignment)
+TEST(matrixTest, CopyAssignment)
 {
     static constexpr std::size_t dim = 2;
 
-    minalg::Matrix m0(dim, dim);
+    minalg::matrix m0(dim, dim);
     m0.at(0, 0) = 1.0;
     m0.at(0, 1) = 2.0;
     m0.at(1, 0) = 3.0;
     m0.at(1, 1) = 4.0;
 
-    minalg::Matrix m1(3, 6);
+    minalg::matrix m1(3, 6);
     m1 = m0;
     EXPECT_EQ(m0.rows(), dim);
     EXPECT_EQ(m1.rows(), dim);
@@ -85,17 +85,17 @@ TEST(MatrixTest, CopyAssignment)
     EXPECT_DOUBLE_EQ(m1.at(1, 1), 4.0);
 }
 
-TEST(MatrixTest, MoveConstruction)
+TEST(matrixTest, MoveConstruction)
 {
     static constexpr std::size_t dim = 2;
 
-    minalg::Matrix m0(2, 2);
+    minalg::matrix m0(2, 2);
     m0.at(0, 0) = 1.0;
     m0.at(0, 1) = 2.0;
     m0.at(1, 0) = 3.0;
     m0.at(1, 1) = 4.0;
 
-    minalg::Matrix m1(std::move(m0));
+    minalg::matrix m1(std::move(m0));
     EXPECT_EQ(m0.rows(), 0);
     EXPECT_EQ(m1.rows(), dim);
     EXPECT_EQ(m0.columns(), 0);
@@ -106,17 +106,17 @@ TEST(MatrixTest, MoveConstruction)
     EXPECT_DOUBLE_EQ(m1.at(1, 1), 4.0);    
 }
 
-TEST(MatrixTest, MoveAssignment)
+TEST(matrixTest, MoveAssignment)
 {
     static constexpr std::size_t dim = 2;
 
-    minalg::Matrix m0(2, 2);
+    minalg::matrix m0(2, 2);
     m0.at(0, 0) = 1.0;
     m0.at(0, 1) = 2.0;
     m0.at(1, 0) = 3.0;
     m0.at(1, 1) = 4.0;
 
-    minalg::Matrix m1(3, 6);
+    minalg::matrix m1(3, 6);
     m1 = std::move(m0);
     EXPECT_EQ(m0.rows(), 0);
     EXPECT_EQ(m1.rows(), dim);
@@ -128,9 +128,9 @@ TEST(MatrixTest, MoveAssignment)
     EXPECT_DOUBLE_EQ(m1.at(1, 1), 4.0); 
 }
 
-TEST(MatrixTest, SetAndGet)
+TEST(matrixTest, SetAndGet)
 {
-    minalg::Matrix m(2, 2);
+    minalg::matrix m(2, 2);
     m.at(0, 0) = 1.0;
     m.at(0, 1) = 2.0;
     m.at(1, 0) = 3.0;
@@ -142,27 +142,27 @@ TEST(MatrixTest, SetAndGet)
     EXPECT_DOUBLE_EQ(m.at(1, 1), 4.0);
 }
 
-TEST(MatrixTest, AccessOutOfRange)
+TEST(matrixTest, AccessOutOfRange)
 {
-    minalg::Matrix m(3, 3);
+    minalg::matrix m(3, 3);
     EXPECT_THROW(m.at(2, 3), std::out_of_range);
     EXPECT_THROW(m.at(3, 2), std::out_of_range);
     EXPECT_THROW(m.at(3, 3), std::out_of_range);
 }
 
-TEST(MatrixTest, Eye)
+TEST(matrixTest, Eye)
 {
-    minalg::Matrix m(minalg::Matrix::eye(2));
+    minalg::matrix m(minalg::matrix::eye(2));
     EXPECT_DOUBLE_EQ(m.at(0, 0), 1.0);
     EXPECT_DOUBLE_EQ(m.at(0, 1), 0.0);
     EXPECT_DOUBLE_EQ(m.at(1, 0), 0.0);
     EXPECT_DOUBLE_EQ(m.at(1, 1), 1.0);
 }
 
-TEST(MatrixTest, ValidDiag)
+TEST(matrixTest, ValidDiag)
 {
     const std::vector<double> vec0 = {1.0, 2.0, 3.0};
-    minalg::Matrix m(minalg::Matrix::diag(vec0));
+    minalg::matrix m(minalg::matrix::diag(vec0));
     EXPECT_EQ(m.rows(), vec0.size());
     EXPECT_EQ(m.columns(), vec0.size());
     EXPECT_DOUBLE_EQ(m.at(0, 0), 1.0);
@@ -176,18 +176,18 @@ TEST(MatrixTest, ValidDiag)
     EXPECT_DOUBLE_EQ(vec0[2], vec1[2]);
 }
 
-TEST(MatrixTest, InvalidDiag)
+TEST(matrixTest, InvalidDiag)
 {
-    minalg::Matrix m(3, 2);
+    minalg::matrix m(3, 2);
     EXPECT_THROW(m.diag(), std::invalid_argument);
 }
 
-TEST(MatrixTest, ValidReshape)
+TEST(matrixTest, ValidReshape)
 {
     const std::vector<double> vec = { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 };
-    minalg::Matrix m0(vec);
+    minalg::matrix m0(vec);
 
-    minalg::Matrix m1(m0.reshape({2, 3}));
+    minalg::matrix m1(m0.reshape({2, 3}));
     EXPECT_EQ(m1.rows(), 2);
     EXPECT_EQ(m1.columns(), 3);
     EXPECT_DOUBLE_EQ(m1.at(0, 0), 1.0);
@@ -198,20 +198,20 @@ TEST(MatrixTest, ValidReshape)
     EXPECT_DOUBLE_EQ(m1.at(1, 2), 6.0);
 }
 
-TEST(MatrixTest, InvalidReshape)
+TEST(matrixTest, InvalidReshape)
 {
     const std::vector<double> vec = { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 };
-    minalg::Matrix m0(vec);
+    minalg::matrix m0(vec);
 
     EXPECT_THROW(m0.reshape({2, 2}), std::invalid_argument);
 }
 
-TEST(MatrixTest, ValidTranspose)
+TEST(matrixTest, ValidTranspose)
 {
-    minalg::Matrix m0({1.0, 2.0, 3.0, 4.0, 5.0, 6.0});
+    minalg::matrix m0({1.0, 2.0, 3.0, 4.0, 5.0, 6.0});
     m0.reshaped({2, 3});
 
-    minalg::Matrix m1(m0.transpose());
+    minalg::matrix m1(m0.transpose());
     EXPECT_EQ(m1.rows(), m0.columns());
     EXPECT_EQ(m1.columns(), m0.rows());
     EXPECT_DOUBLE_EQ(m1.at(0, 0), 1.0);
@@ -222,18 +222,18 @@ TEST(MatrixTest, ValidTranspose)
     EXPECT_DOUBLE_EQ(m1.at(2, 1), 6.0);
 }
 
-TEST(MatrixTest, InvalidTranspose)
+TEST(matrixTest, InvalidTranspose)
 {
-    minalg::Matrix m0(3, 3);
-    minalg::Matrix m1(4, 4);
+    minalg::matrix m0(3, 3);
+    minalg::matrix m1(4, 4);
 
-    EXPECT_THROW(minalg::Matrix::transpose(m0, m1), std::invalid_argument);
+    EXPECT_THROW(minalg::matrix::transpose(m0, m1), std::invalid_argument);
 }
 
-TEST(MatrixTest, DotProduct)
+TEST(matrixTest, DotProduct)
 {
-    minalg::Matrix m({1.0, 2.0, 3.0}); // Column matrix.
-    minalg::Matrix m1(minalg::Matrix::multiply(m.transpose(), m));
+    minalg::matrix m({1.0, 2.0, 3.0}); // Column matrix.
+    minalg::matrix m1(minalg::matrix::multiply(m.transpose(), m));
 
     EXPECT_EQ(m1.rows(), 1);
     EXPECT_EQ(m1.columns(), 1);
@@ -242,10 +242,10 @@ TEST(MatrixTest, DotProduct)
     EXPECT_DOUBLE_EQ(m1.at(0, 0), ip);
 }
 
-TEST(MatrixTest, MulEye)
+TEST(matrixTest, MulEye)
 {
-    minalg::Matrix m(minalg::Matrix::eye(5));
-    minalg::Matrix m1(minalg::Matrix::multiply(m, m));
+    minalg::matrix m(minalg::matrix::eye(5));
+    minalg::matrix m1(minalg::matrix::multiply(m, m));
 
     EXPECT_EQ(m1.rows(), 5);
     EXPECT_EQ(m1.columns(), 5);
@@ -258,12 +258,12 @@ TEST(MatrixTest, MulEye)
     EXPECT_DOUBLE_EQ(diag[4], 1.0);
 }
 
-TEST(MatrixTest, MatSqr)
+TEST(matrixTest, MatSqr)
 {
-    minalg::Matrix m({1.0, 2.0, 3.0, 4.0});
+    minalg::matrix m({1.0, 2.0, 3.0, 4.0});
     m.reshaped({2, 2});
 
-    minalg::Matrix m1(minalg::Matrix::multiply(m, m));
+    minalg::matrix m1(minalg::matrix::multiply(m, m));
 
     EXPECT_EQ(m1.rows(), 2);
     EXPECT_EQ(m1.columns(), 2);
@@ -274,32 +274,32 @@ TEST(MatrixTest, MatSqr)
     EXPECT_DOUBLE_EQ(m1.at(1, 1), 3. * 2. + 4. * 4.);
 }
 
-TEST(MatrixTest, InvalidMultiplication1)
+TEST(matrixTest, InvalidMultiplication1)
 {
-    minalg::Matrix m0(3, 4);
-    minalg::Matrix m1(2, 1);
-    minalg::Matrix m2(3, 1);
+    minalg::matrix m0(3, 4);
+    minalg::matrix m1(2, 1);
+    minalg::matrix m2(3, 1);
 
-    EXPECT_THROW(minalg::Matrix::multiply(m0, m1, m2), std::invalid_argument);
+    EXPECT_THROW(minalg::matrix::multiply(m0, m1, m2), std::invalid_argument);
 }
 
-TEST(MatrixTest, InvalidMultiplication2)
+TEST(matrixTest, InvalidMultiplication2)
 {
-    minalg::Matrix m0(3, 4);
-    minalg::Matrix m1(4, 1);
-    minalg::Matrix m2(3, 2);
+    minalg::matrix m0(3, 4);
+    minalg::matrix m1(4, 1);
+    minalg::matrix m2(3, 2);
 
-    EXPECT_THROW(minalg::Matrix::multiply(m0, m1, m2), std::invalid_argument);
+    EXPECT_THROW(minalg::matrix::multiply(m0, m1, m2), std::invalid_argument);
 }
 
-TEST(MatrixTest, ValidHconcat)
+TEST(matrixTest, ValidHconcat)
 {
-    minalg::Matrix m0({1.0, 2.0, 3.0, 4.0});
+    minalg::matrix m0({1.0, 2.0, 3.0, 4.0});
     m0.reshaped({2, 2});
 
-    minalg::Matrix m1(std::vector<double>({5.0, 6.0}));
+    minalg::matrix m1(std::vector<double>({5.0, 6.0}));
 
-    minalg::Matrix m2(minalg::Matrix::hconcat(m0, m1));
+    minalg::matrix m2(minalg::matrix::hconcat(m0, m1));
     EXPECT_EQ(m2.rows(), m0.rows());
     EXPECT_EQ(m2.columns(), m0.columns() + m1.columns());
 
@@ -311,44 +311,44 @@ TEST(MatrixTest, ValidHconcat)
     EXPECT_DOUBLE_EQ(m2.at(1, 2), 6.0);
 }
 
-TEST(MatrixTest, InvalidHconcat1)
+TEST(matrixTest, InvalidHconcat1)
 {
-    minalg::Matrix m0(3, 3);
-    minalg::Matrix m1(2, 3);
-    minalg::Matrix m2(3, 3);
+    minalg::matrix m0(3, 3);
+    minalg::matrix m1(2, 3);
+    minalg::matrix m2(3, 3);
 
-    EXPECT_THROW(minalg::Matrix::hconcat(m0, m1, m2), std::invalid_argument);
+    EXPECT_THROW(minalg::matrix::hconcat(m0, m1, m2), std::invalid_argument);
 }
 
-TEST(MatrixTest, InvalidHconcat2)
+TEST(matrixTest, InvalidHconcat2)
 {
-    minalg::Matrix m0(3, 3);
-    minalg::Matrix m1(3, 3);
-    minalg::Matrix m2(2, 3);
+    minalg::matrix m0(3, 3);
+    minalg::matrix m1(3, 3);
+    minalg::matrix m2(2, 3);
 
-    EXPECT_THROW(minalg::Matrix::hconcat(m0, m1, m2), std::invalid_argument);
+    EXPECT_THROW(minalg::matrix::hconcat(m0, m1, m2), std::invalid_argument);
 }
 
-TEST(MatrixTest, Equal)
+TEST(matrixTest, Equal)
 {
-    minalg::Matrix m0({1.0, 2.0, 3.0, 4.0});
+    minalg::matrix m0({1.0, 2.0, 3.0, 4.0});
     m0.reshaped({2, 2});
     EXPECT_TRUE(m0 == m0);
 
-    minalg::Matrix m1(m0);
+    minalg::matrix m1(m0);
     EXPECT_TRUE(m0 == m1);
 
     m1.at(1, 1) += 1e-10; // Difference within tolerances.
     EXPECT_TRUE(m0 == m1);
 
-    minalg::Matrix m2(m0);
+    minalg::matrix m2(m0);
     m2.at(1, 1) += 1e-6; // Difference not within tolerances.
     EXPECT_FALSE(m0 == m2);
 }
 
-TEST(MatrixTest, IsSymmetric)
+TEST(matrixTest, IsSymmetric)
 {
-    minalg::Matrix m0({1.0, 2.0, 2.0, 4.0});
+    minalg::matrix m0({1.0, 2.0, 2.0, 4.0});
     m0.reshaped({2, 2});
 
     EXPECT_TRUE(m0.is_symmetric());
@@ -357,7 +357,7 @@ TEST(MatrixTest, IsSymmetric)
     EXPECT_FALSE(m0.is_symmetric());
 }
 
-TEST(MatrixTest, IsOrthogonal)
+TEST(matrixTest, IsOrthogonal)
 {
     const std::vector<double> data =
     {
@@ -366,7 +366,7 @@ TEST(MatrixTest, IsOrthogonal)
         0, 0.70710678, 0.70710678
     };
 
-    minalg::Matrix m0(data);
+    minalg::matrix m0(data);
     m0.reshaped({3, 3});
 
     EXPECT_TRUE(m0.is_orthogonal());    

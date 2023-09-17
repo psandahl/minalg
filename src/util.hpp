@@ -6,7 +6,7 @@
 
 namespace minalg {
 
-class Matrix;
+class matrix;
 
 /**
  * @brief Check if a value is close to zero
@@ -25,7 +25,7 @@ inline bool near_zero(double value) { return std::fabs(value) < 1e-07; }
  * @param len length of the data.
  * @return the inner product.
 */
-double inner_product(const Matrix& m0, const Matrix& m1,
+double inner_product(const matrix& m0, const matrix& m1,
                      std::size_t row_m0, std::size_t col_m1, 
                      std::size_t len);
 
@@ -45,7 +45,7 @@ std::vector<std::size_t> index_vector(std::size_t indices);
  * @return the row index with biggest absolute value.
 */
 std::size_t find_pivot_row_index(std::size_t diag, 
-                                 const Matrix& m, 
+                                 const matrix& m, 
                                  const std::vector<std::size_t>& rows);
 
 }

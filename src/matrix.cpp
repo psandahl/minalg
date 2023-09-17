@@ -178,6 +178,24 @@ Matrix Matrix::transpose(const Matrix& m)
     return m1;
 }
 
+void Matrix::scale_row(std::size_t row, double factor)
+{
+    double *ptr = &at(row, 0);
+    for (std::size_t col = 0; col < columns(); ++col) {
+        *ptr++ *= factor;
+    }
+}
+
+void Matrix::linearly_combine(std::size_t src_row, double factor, std::size_t tgt_row)
+{
+    double *src = &at(src_row, 0);
+    double *tgt = &at(tgt_row, 0);
+
+    for (std::size_t col = 0; col < columns(); ++col) {
+        *tgt++ += *src++ * factor;
+    }
+}
+
 void Matrix::multiply(const Matrix& m0, const Matrix& m1, Matrix& m2)
 {
     const auto [rows0, columns0] = m0.shape();

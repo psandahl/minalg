@@ -168,6 +168,22 @@ public:
     Matrix transpose() const { return transpose(*this); }
 
     /**
+     * @brief Multiply the given row with a scale factor.
+     * @param row the row number.
+     * @param factor the factor to scale the row.
+    */
+    void scale_row(std::size_t row, double factor);
+
+    /**
+     * @brief Linearly combine two rows by adding the scaled source row
+     * to the target row.
+     * @param src_row the source row.
+     * @param factor the factor to scale the source row.
+     * @param tgt_row the target row.
+    */
+    void linearly_combine(std::size_t src_row, double factor, std::size_t tgt_row);
+
+    /**
      * @brief Render a string representation.
      * @param precision the numeric precision.
      * @return the info string.

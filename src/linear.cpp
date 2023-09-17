@@ -8,8 +8,6 @@
 #include <stdexcept>
 #include <vector>
 
-#include <iostream>
-
 namespace minalg {
 
 static std::size_t find_pivot_index(std::size_t diag, 
@@ -30,20 +28,6 @@ static std::size_t find_pivot_index(std::size_t diag,
     return max_row;
 }
 
-static void multiply_row(Matrix& m, std::size_t row, double value)
-{
-    for (std::size_t col = 0; col < m.columns(); ++col) {
-        m.at(row, col) *= value;
-    }
-}
-
-static void linearly_combine_rows(Matrix& m, std::size_t dst_row, std::size_t src_row, double factor)
-{
-    for (std::size_t col = 0; col < m.columns(); ++col) {
-        m.at(dst_row, col) += m.at(src_row, col) * factor;
-    }
-}
-
 Matrix solve(const Matrix& A, const Matrix& b)
 {
     if (!A.is_square()) {
@@ -61,8 +45,6 @@ Matrix solve(const Matrix& A, const Matrix& b)
     // Vector with row indices.
     std::vector<std::size_t> rows(index_vector(A.rows()));
 
-    std::cout << "augmented matrix:\n" << m.info() << std::endl;
-
     // Iterate through the augmented matrix to get an upper diagonal matrix.
     for (std::size_t diag = 0; diag < rows.size(); ++diag) {
         // Find the pivot index - and swap the indices. The row with the
@@ -77,8 +59,8 @@ Matrix solve(const Matrix& A, const Matrix& b)
         }
 
         // Normalize pivot row using pivot value to simplify further
-        // calculations.
-        multiply_row(m, rows[diag], 1.0 / pivot_value);
+        // calculations.        
+        m.scale_row(rows[diag], 1. / pivot_value);
 
         // Eliminate rows below.
         for (std::size_t elim = diag + 1; elim < rows.size(); ++elim) {
@@ -87,11 +69,8 @@ Matrix solve(const Matrix& A, const Matrix& b)
 
             // ... and use the value to make a linear combination that
             // eliminates the cell.
-            linearly_combine_rows(m, rows[elim], rows[diag], -elim_value);
-        }
-
-        std::cout << "diag=" << diag << ", pivot_value=" << pivot_value << std::endl;
-        std::cout << "m=\n" << m.info() << std::endl;
+            m.linearly_combine(rows[diag], -elim_value, rows[elim]);            
+        }        
     }
 
     // Perform back-substitution to get the solutions.

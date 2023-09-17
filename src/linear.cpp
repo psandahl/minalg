@@ -80,15 +80,15 @@ Matrix solve(const Matrix& A, const Matrix& b)
         const std::size_t row = i - 1;
         // Initialize with the corresponding value from the
         // augmented column.        
-        double value = m.at(rows[row], m.columns() - 1);
+        double value = m.get(rows[row], m.columns() - 1);
 
         // Back-substitute.
         for (std::size_t col = row + 1; col < m.columns() - 1; ++col) {
-            const double term = -m.at(rows[row], col) * x.at(col, 0);
+            const double term = -m.get(rows[row], col) * x.at(col, 0);
             value += term;            
         }
 
-        x.at(row, 0) = value;        
+        x.get(row, 0) = value;        
     }
 
     return x;

@@ -60,3 +60,17 @@ TEST(LinearTest, Solve2)
     EXPECT_DOUBLE_EQ(b2.at(3, 0), b.at(3, 0));
     EXPECT_DOUBLE_EQ(b2.at(4, 0), b.at(4, 0));
 }
+
+TEST(LinearTest, InvalidSolve1)
+{
+    const minalg::Matrix A(minalg::Matrix({0, 1, 0, -1}).reshape({2, 2}));
+    const minalg::Matrix b(std::vector<double>({2, 3}));
+    EXPECT_THROW(minalg::solve(A, b), std::out_of_range);
+}
+
+TEST(LinearTest, InvalidSolve2)
+{
+    const minalg::Matrix A(minalg::Matrix({1, 2, 3, 4, 5, 6}).reshape({3, 2}));
+    const minalg::Matrix b(std::vector<double>({1, 2, 3}));
+    EXPECT_THROW(minalg::solve(A, b), std::invalid_argument);
+}

@@ -1,12 +1,19 @@
 #pragma once
 
-#include <minalg/matrix.hpp>
-
 #include <cmath>
 #include <cstddef>
 #include <vector>
 
 namespace minalg {
+
+class Matrix;
+
+/**
+ * @brief Check if a value is close to zero
+ * @param value the value to check.
+ * @return boolean value.
+*/
+inline bool near_zero(double value) { return std::fabs(value) < 1e-09; }
 
 /**
  * @brief Compute the inner product between a row in matrix m0 and
@@ -40,12 +47,5 @@ std::vector<std::size_t> index_vector(std::size_t indices);
 std::size_t find_pivot_row_index(std::size_t diag, 
                                  const Matrix& m, 
                                  const std::vector<std::size_t>& rows);
-
-/**
- * @brief Check if a value is close to zero
- * @param value the value to check.
- * @return boolean value.
-*/
-inline bool near_zero(double value) { return std::fabs(value) < 1e-09; }
 
 }

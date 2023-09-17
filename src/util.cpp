@@ -1,3 +1,5 @@
+#include <minalg/matrix.hpp>
+
 #include "util.hpp"
 
 namespace minalg {

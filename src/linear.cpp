@@ -37,52 +37,59 @@ matrix invert(const matrix& A)
 
 std::tuple<matrix, matrix, matrix> lu_decomp(const matrix& A)
 {
-    // Scipy do lu decomp on non-square matrices, but here square is
-    // required.
+    // This implementation requires square matrices, even though
+    // the decomposition of non-square matrices are possible.
     if (!A.is_square()) {
         throw std::invalid_argument("matrix A must be square");
     }
 
-    // Matrices L and U.
-    minalg::matrix L(A.shape());
-    minalg::matrix U(A);
+    // Permuted L and U matrices. As the last step the matrices
+    // will be rectified to their normal form.
+    minalg::matrix Lp(A.shape());
+    minalg::matrix Up(A);
 
     // Vector with row indices.
-    std::vector<std::size_t> rows(index_vector(U.rows()));
+    std::vector<std::size_t> rows(index_vector(Up.rows()));
 
     // Iterate the diagonal and find pivot elements in U.
     for (std::size_t diag = 0; diag < rows.size() - 1; ++diag) {
-        const std::size_t pivot_row_index = find_pivot_row_index(diag, U, rows);
+        const std::size_t pivot_row_index = find_pivot_row_index(diag, Up, rows);
         std::swap(rows[pivot_row_index], rows[diag]);        
 
         // Read the pivot value. Throw if close to zero.
-        const double pivot_value = U.at(rows[diag], diag);
+        const double pivot_value = Up.at(rows[diag], diag);
         if (near_zero(pivot_value)) {
             throw std::invalid_argument("Singular matrix");
         }
 
         // Eliminate rows in U, and set cells in L.
         for (std::size_t elim = diag + 1; elim < rows.size(); ++elim) {
-            const double elim_value = U.at(rows[elim], diag) / pivot_value;            
+            const double elim_value = Up.at(rows[elim], diag) / pivot_value;            
 
-            L.at(rows[elim], diag) = elim_value;
-            U.linearly_combine(rows[diag], -elim_value, rows[elim]);
+            Lp.get(rows[elim], diag) = elim_value;
+            Up.linearly_combine(rows[diag], -elim_value, rows[elim]);
         }
     }
 
-    // Permutation matrix P.
+    // Create the permutation matrix P. P is usable for reconstructing
+    // A = P * L * U.
     minalg::matrix P(A.shape());
     for (std::size_t i = 0; i < rows.size(); ++i) {
-        P.at(rows[i], i) = 1.0;
+        P.get(rows[i], i) = 1.0;
     }
+
+    // But to rectify L and U, P's transpose must be used.
     const minalg::matrix Pt(P.transpose());
+    minalg::matrix L(Pt * Lp);
+    const minalg::matrix U(Pt * Up);
 
-    minalg::matrix LL = Pt * L;
-    for (std::size_t diag = 0; diag < LL.rows(); ++diag) {
-        LL.at(diag, diag) = 1.0;
+    // Fill in the diagonal for L.
+    for (std::size_t diag = 0; diag < L.rows(); ++diag) {
+        L.get(diag, diag) = 1.0;
     }
-
-    return { std::move(P), std::move(LL), std::move(Pt * U) };
+    
+    // Return the matrices.
+    return { std::move(P), std::move(L), std::move(U) };
 }
 
 matrix gaussian_elimination(const matrix& A, const matrix& b)

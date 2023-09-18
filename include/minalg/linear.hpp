@@ -2,6 +2,8 @@
 
 #include <minalg/matrix.hpp>
 
+#include <tuple>
+
 namespace minalg {
 namespace linear {
 
@@ -18,5 +20,7 @@ matrix solve(const matrix& A, const matrix& b);
  * @return inverted matrix.
 */
 matrix invert(const matrix& A);
+
+std::tuple<matrix, matrix, matrix> lu_decomp(const matrix& A);
 
 }}

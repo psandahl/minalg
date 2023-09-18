@@ -35,6 +35,49 @@ matrix invert(const matrix& A)
     return gauss_jordan_elimination(A);
 }
 
+std::tuple<matrix, matrix, matrix> lu_decomp(const matrix& A)
+{
+    // Scipy do lu decomp on non-square matrices, but here square is
+    // required.
+    if (!A.is_square()) {
+        throw std::invalid_argument("matrix A must be square");
+    }
+
+    // Matrices L and U.
+    minalg::matrix L(minalg::matrix::eye(A.rows()));
+    minalg::matrix U(A);
+
+    // Vector with row indices.
+    std::vector<std::size_t> rows(index_vector(U.rows()));
+
+    // Iterate the diagonal and find pivot elements in U.
+    for (std::size_t diag = 0; diag < rows.size() - 1; ++diag) {
+        const std::size_t pivot_row_index = find_pivot_row_index(diag, U, rows);
+        std::swap(rows[pivot_row_index], rows[diag]);
+
+        // Read the pivot value. Throw if close to zero.
+        const double pivot_value = U.at(rows[diag], diag);
+        if (near_zero(pivot_value)) {
+            throw std::invalid_argument("Singular matrix");
+        }
+
+        // Eliminate rows in U, and set cells in L.
+        for (std::size_t elim = diag + 1; elim < rows.size(); ++elim) {
+            const double elim_value = U.at(rows[elim], diag) / pivot_value;            
+            L.at(elim, diag) = elim_value;
+            U.linearly_combine(rows[diag], -elim_value, rows[elim]);
+        }
+    }
+
+    // Permutation matrix P.
+    minalg::matrix P(A.shape());
+    for (std::size_t i = 0; i < rows.size(); ++i) {
+        P.at(i, rows[i]) = 1.0;
+    }    
+
+    return { std::move(P), std::move(L), std::move(P * U) };
+}
+
 matrix gaussian_elimination(const matrix& A, const matrix& b)
 {
     // Solve the linear system through Gaussian elimination.

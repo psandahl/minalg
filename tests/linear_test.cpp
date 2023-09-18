@@ -67,7 +67,7 @@ TEST(LinearTest, InvalidSolve1)
 {
     const minalg::matrix A(minalg::matrix({0, 1, 0, -1}).reshape({2, 2}));
     const minalg::matrix b(std::vector<double>({2, 3}));
-    EXPECT_THROW(minalg::linear::solve(A, b), std::invalid_argument);
+    EXPECT_THROW(minalg::linear::solve(A, b), minalg::linear::singular_matrix);
 }
 
 TEST(LinearTest, InvalidSolve2)
@@ -139,7 +139,7 @@ TEST(LinearTest, Invert2)
 TEST(LinearTest, InvalidInvert)
 {
     const minalg::matrix A(minalg::matrix({0, 1, 2, 3, 4, 5, 6, 7, 8}).reshape({3, 3}));
-    EXPECT_THROW(minalg::linear::invert(A), std::invalid_argument);
+    EXPECT_THROW(minalg::linear::invert(A), minalg::linear::singular_matrix);
 }
 
 TEST(LinearTest, lu_decomp1)

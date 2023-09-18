@@ -2,10 +2,26 @@
 
 #include <minalg/matrix.hpp>
 
+#include <stdexcept>
 #include <tuple>
 
 namespace minalg {
 namespace linear {
+
+/**
+ * @brief Custom runtime error - singular matrix.
+*/
+class singular_matrix: public std::runtime_error {
+public:
+    singular_matrix(const std::string& what_arg):
+        std::runtime_error(what_arg) {}
+    singular_matrix(const char* what_arg):
+        std::runtime_error(what_arg) {}
+
+    virtual const char* what() const noexcept {
+        return std::runtime_error::what();
+    }
+};
 
 /**
  * @brief Solve the linear system Ax=b.

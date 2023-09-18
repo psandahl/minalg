@@ -59,7 +59,7 @@ std::tuple<matrix, matrix, matrix> lu_decomp(const matrix& A)
         // Read the pivot value. Throw if close to zero.
         const double pivot_value = Up.at(rows[diag], diag);
         if (near_zero(pivot_value)) {
-            throw std::invalid_argument("Singular matrix");
+            throw singular_matrix("lu_decomp()");
         }
 
         // Eliminate rows in U, and set cells in L.
@@ -114,7 +114,7 @@ double det(const matrix& A)
         const double sign = diff == 0 || changed_rows % 2 == 0 ? 1.0 : -1.0;
 
         return sign * det;
-    } catch (const std::invalid_argument&) {
+    } catch (const singular_matrix&) {
         // The matrix A is singular - the determinant is zero.
         return 0.0;
     }
@@ -140,7 +140,7 @@ matrix gaussian_elimination(const matrix& A, const matrix& b)
         // Read pivot value.
         const double pivot_value = m.at(rows[diag], diag);
         if (near_zero(pivot_value)) {
-            throw std::invalid_argument("Singular matrix");
+            throw singular_matrix("gaussian_elemination()");
         }
 
         // Normalize pivot row using pivot value to simplify further
@@ -199,7 +199,7 @@ matrix gauss_jordan_elimination(const matrix& A)
         // Read pivot value.
         const double pivot_value = m.at(rows[diag], diag);
         if (near_zero(pivot_value)) {
-            throw std::invalid_argument("Singular matrix");
+            throw singular_matrix("gauss_jordan_elimination");
         }
 
         // Normalize pivot row using pivot value to simplify further

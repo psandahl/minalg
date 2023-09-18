@@ -144,7 +144,13 @@ TEST(LinearTest, InvalidInvert)
 
 TEST(LinearTest, lu_decomp1)
 {
-    const minalg::matrix A(minalg::matrix({1, 2, 3, 0, 1, 4, 5, 6, 0}).reshape({3, 3}));
+    const std::vector<double> data =
+    {
+        1, 2, 3, 
+        0, 1, 4,
+        5, 6, 0,        
+    };
+    const minalg::matrix A(minalg::matrix(data).reshape({3, 3}));
     const auto [P, L, U] = minalg::linear::lu_decomp(A);
 
     // Reconstruct A from P, L and U.
@@ -189,13 +195,32 @@ TEST(LinearTest, lu_decomp1)
     EXPECT_NEAR(U.at(2, 2), -0.2, 1e-15);
 }
 
+
 TEST(LinearTest, lu_decomp2)
-{
+{    
+    const std::vector<double> data =
+    {
+        -2, 2, -1, 
+        6, -6, 7,
+        3, -8, 4,        
+    };
+
+    const minalg::matrix A(minalg::matrix(data).reshape({3, 3}));
+    const auto [P, L, U] = minalg::linear::lu_decomp(A);
+
+    // Reconstruct A from P, L and U.
+    const minalg::matrix AA(P * L * U);
+    EXPECT_TRUE(A == AA);
+}
+
+
+TEST(LinearTest, lu_decomp3)
+{    
     const std::vector<double> data =
     {
         3, 1, -2, 5, -1,
         2, 7, -8, 9, 3,
-        0, -4, 2, 6, 1,
+        1, -4, 2, 6, 1,
         1, 5, 0, -2, 2,
         -1, 0, 3, -3, 6
     };
@@ -205,32 +230,5 @@ TEST(LinearTest, lu_decomp2)
 
     // Reconstruct A from P, L and U.
     const minalg::matrix AA(P * L * U);
-
-    std::cout << "A=\n" << A.info() << std::endl;    
-    std::cout << "AA=\n" << AA.info() << std::endl;
-    std::cout << "P=\n" << P.info() << std::endl;    
-    std::cout << "L=\n" << L.info() << std::endl;    
-    std::cout << "U=\n" << U.info() << std::endl;    
-
-    //EXPECT_TRUE(A == AA);
-#if 0
-    >>> P
-array([[1., 0., 0., 0., 0.],
-       [0., 1., 0., 0., 0.],
-       [0., 0., 0., 1., 0.],
-       [0., 0., 1., 0., 0.],
-       [0., 0., 0., 0., 1.]])
->>> L
-array([[ 1.        ,  0.        ,  0.        ,  0.        ,  0.        ],
-       [ 0.66666667,  1.        ,  0.        ,  0.        ,  0.        ],
-       [ 0.33333333,  0.73684211,  1.        ,  0.        ,  0.        ],
-       [ 0.        , -0.63157895, -0.39622642,  1.        ,  0.        ],
-       [-0.33333333,  0.05263158,  0.48113208,  0.33090379,  1.        ]])
->>> U
-array([[ 3.        ,  1.        , -2.        ,  5.        , -1.        ],
-       [ 0.        ,  6.33333333, -6.66666667,  5.66666667,  3.66666667],
-       [ 0.        ,  0.        ,  5.57894737, -7.84210526, -0.36842105],
-       [ 0.        ,  0.        ,  0.        ,  6.47169811,  3.16981132],
-       [ 0.        ,  0.        ,  0.        ,  0.        ,  4.60204082]])
-#endif
+    EXPECT_TRUE(A == AA);
 }

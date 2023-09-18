@@ -44,7 +44,7 @@ std::tuple<matrix, matrix, matrix> lu_decomp(const matrix& A)
     }
 
     // Matrices L and U.
-    minalg::matrix L(minalg::matrix::eye(A.rows()));
+    minalg::matrix L(A.shape());
     minalg::matrix U(A);
 
     // Vector with row indices.
@@ -53,7 +53,7 @@ std::tuple<matrix, matrix, matrix> lu_decomp(const matrix& A)
     // Iterate the diagonal and find pivot elements in U.
     for (std::size_t diag = 0; diag < rows.size() - 1; ++diag) {
         const std::size_t pivot_row_index = find_pivot_row_index(diag, U, rows);
-        std::swap(rows[pivot_row_index], rows[diag]);
+        std::swap(rows[pivot_row_index], rows[diag]);        
 
         // Read the pivot value. Throw if close to zero.
         const double pivot_value = U.at(rows[diag], diag);
@@ -64,7 +64,8 @@ std::tuple<matrix, matrix, matrix> lu_decomp(const matrix& A)
         // Eliminate rows in U, and set cells in L.
         for (std::size_t elim = diag + 1; elim < rows.size(); ++elim) {
             const double elim_value = U.at(rows[elim], diag) / pivot_value;            
-            L.at(elim, diag) = elim_value;
+
+            L.at(rows[elim], diag) = elim_value;
             U.linearly_combine(rows[diag], -elim_value, rows[elim]);
         }
     }
@@ -72,10 +73,16 @@ std::tuple<matrix, matrix, matrix> lu_decomp(const matrix& A)
     // Permutation matrix P.
     minalg::matrix P(A.shape());
     for (std::size_t i = 0; i < rows.size(); ++i) {
-        P.at(i, rows[i]) = 1.0;
-    }    
+        P.at(rows[i], i) = 1.0;
+    }
+    const minalg::matrix Pt(P.transpose());
 
-    return { std::move(P), std::move(L), std::move(P * U) };
+    minalg::matrix LL = Pt * L;
+    for (std::size_t diag = 0; diag < LL.rows(); ++diag) {
+        LL.at(diag, diag) = 1.0;
+    }
+
+    return { std::move(P), std::move(LL), std::move(Pt * U) };
 }
 
 matrix gaussian_elimination(const matrix& A, const matrix& b)
@@ -168,7 +175,7 @@ matrix gauss_jordan_elimination(const matrix& A)
         for (std::size_t elim = 0; elim < rows.size(); ++elim) {
             if (rows[elim] != rows[diag]) {                
                 // Read value for the cell to eliminate ...
-                const double elim_value = m.get(rows[elim], diag);
+                const double elim_value = m.get(rows[elim], diag);                
 
                 // ... and use the value to make a linear combination that
                 // eliminates the cell.

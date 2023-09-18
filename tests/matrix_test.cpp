@@ -7,7 +7,7 @@
 
 #include <gtest/gtest.h>
 
-TEST(matrixTest, ValidConstruction)
+TEST(MatrixTest, ValidConstruction)
 {
     static constexpr std::size_t rows = 6;
     static constexpr std::size_t columns = 3;
@@ -22,14 +22,14 @@ TEST(matrixTest, ValidConstruction)
     EXPECT_EQ(num_columns, columns);
 }
 
-TEST(matrixTest, InvalidConstruction) 
+TEST(MatrixTest, InvalidConstruction) 
 {
     EXPECT_THROW(minalg::matrix(0, 0), std::invalid_argument);  
     EXPECT_THROW(minalg::matrix(1, 0), std::invalid_argument);  
     EXPECT_THROW(minalg::matrix(0, 1), std::invalid_argument);      
 }
 
-TEST(matrixTest, LiteralConstruction)
+TEST(MatrixTest, LiteralConstruction)
 {
     const std::vector<double> vec = { 1.0, 2.0, 3.0, 4.0 };
     
@@ -42,7 +42,7 @@ TEST(matrixTest, LiteralConstruction)
     EXPECT_DOUBLE_EQ(m.at(3, 0), 4.0);
 }
 
-TEST(matrixTest, CopyConstruction)
+TEST(MatrixTest, CopyConstruction)
 {
     static constexpr std::size_t dim = 2;
 
@@ -63,7 +63,7 @@ TEST(matrixTest, CopyConstruction)
     EXPECT_DOUBLE_EQ(m1.at(1, 1), 4.0);
 }
 
-TEST(matrixTest, CopyAssignment)
+TEST(MatrixTest, CopyAssignment)
 {
     static constexpr std::size_t dim = 2;
 
@@ -85,7 +85,7 @@ TEST(matrixTest, CopyAssignment)
     EXPECT_DOUBLE_EQ(m1.at(1, 1), 4.0);
 }
 
-TEST(matrixTest, MoveConstruction)
+TEST(MatrixTest, MoveConstruction)
 {
     static constexpr std::size_t dim = 2;
 
@@ -106,7 +106,7 @@ TEST(matrixTest, MoveConstruction)
     EXPECT_DOUBLE_EQ(m1.at(1, 1), 4.0);    
 }
 
-TEST(matrixTest, MoveAssignment)
+TEST(MatrixTest, MoveAssignment)
 {
     static constexpr std::size_t dim = 2;
 
@@ -128,7 +128,7 @@ TEST(matrixTest, MoveAssignment)
     EXPECT_DOUBLE_EQ(m1.at(1, 1), 4.0); 
 }
 
-TEST(matrixTest, SetAndGet)
+TEST(MatrixTest, SetAndGet)
 {
     minalg::matrix m(2, 2);
     m.at(0, 0) = 1.0;
@@ -142,7 +142,7 @@ TEST(matrixTest, SetAndGet)
     EXPECT_DOUBLE_EQ(m.at(1, 1), 4.0);
 }
 
-TEST(matrixTest, AccessOutOfRange)
+TEST(MatrixTest, AccessOutOfRange)
 {
     minalg::matrix m(3, 3);
     EXPECT_THROW(m.at(2, 3), std::out_of_range);
@@ -150,7 +150,7 @@ TEST(matrixTest, AccessOutOfRange)
     EXPECT_THROW(m.at(3, 3), std::out_of_range);
 }
 
-TEST(matrixTest, Eye)
+TEST(MatrixTest, Eye)
 {
     minalg::matrix m(minalg::matrix::eye(2));
     EXPECT_DOUBLE_EQ(m.at(0, 0), 1.0);
@@ -159,7 +159,7 @@ TEST(matrixTest, Eye)
     EXPECT_DOUBLE_EQ(m.at(1, 1), 1.0);
 }
 
-TEST(matrixTest, ValidDiag)
+TEST(MatrixTest, ValidDiag)
 {
     const std::vector<double> vec0 = {1.0, 2.0, 3.0};
     minalg::matrix m(minalg::matrix::diag(vec0));
@@ -176,13 +176,13 @@ TEST(matrixTest, ValidDiag)
     EXPECT_DOUBLE_EQ(vec0[2], vec1[2]);
 }
 
-TEST(matrixTest, InvalidDiag)
+TEST(MatrixTest, InvalidDiag)
 {
     minalg::matrix m(3, 2);
     EXPECT_THROW(m.diag(), std::invalid_argument);
 }
 
-TEST(matrixTest, ValidReshape)
+TEST(MatrixTest, ValidReshape)
 {
     const std::vector<double> vec = { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 };
     minalg::matrix m0(vec);
@@ -198,7 +198,7 @@ TEST(matrixTest, ValidReshape)
     EXPECT_DOUBLE_EQ(m1.at(1, 2), 6.0);
 }
 
-TEST(matrixTest, InvalidReshape)
+TEST(MatrixTest, InvalidReshape)
 {
     const std::vector<double> vec = { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 };
     minalg::matrix m0(vec);
@@ -206,7 +206,7 @@ TEST(matrixTest, InvalidReshape)
     EXPECT_THROW(m0.reshape({2, 2}), std::invalid_argument);
 }
 
-TEST(matrixTest, ValidTranspose)
+TEST(MatrixTest, ValidTranspose)
 {
     minalg::matrix m0({1.0, 2.0, 3.0, 4.0, 5.0, 6.0});
     m0.reshaped({2, 3});
@@ -222,7 +222,7 @@ TEST(matrixTest, ValidTranspose)
     EXPECT_DOUBLE_EQ(m1.at(2, 1), 6.0);
 }
 
-TEST(matrixTest, InvalidTranspose)
+TEST(MatrixTest, InvalidTranspose)
 {
     minalg::matrix m0(3, 3);
     minalg::matrix m1(4, 4);
@@ -230,7 +230,7 @@ TEST(matrixTest, InvalidTranspose)
     EXPECT_THROW(minalg::matrix::transpose(m0, m1), std::invalid_argument);
 }
 
-TEST(matrixTest, DotProduct)
+TEST(MatrixTest, DotProduct)
 {
     minalg::matrix m({1.0, 2.0, 3.0}); // Column matrix.
     minalg::matrix m1(minalg::matrix::multiply(m.transpose(), m));
@@ -242,7 +242,7 @@ TEST(matrixTest, DotProduct)
     EXPECT_DOUBLE_EQ(m1.at(0, 0), ip);
 }
 
-TEST(matrixTest, MulEye)
+TEST(MatrixTest, MulEye)
 {
     minalg::matrix m(minalg::matrix::eye(5));
     minalg::matrix m1(minalg::matrix::multiply(m, m));
@@ -258,7 +258,7 @@ TEST(matrixTest, MulEye)
     EXPECT_DOUBLE_EQ(diag[4], 1.0);
 }
 
-TEST(matrixTest, MatSqr)
+TEST(MatrixTest, MatSqr)
 {
     minalg::matrix m({1.0, 2.0, 3.0, 4.0});
     m.reshaped({2, 2});
@@ -274,7 +274,7 @@ TEST(matrixTest, MatSqr)
     EXPECT_DOUBLE_EQ(m1.at(1, 1), 3. * 2. + 4. * 4.);
 }
 
-TEST(matrixTest, InvalidMultiplication1)
+TEST(MatrixTest, InvalidMultiplication1)
 {
     minalg::matrix m0(3, 4);
     minalg::matrix m1(2, 1);
@@ -283,7 +283,7 @@ TEST(matrixTest, InvalidMultiplication1)
     EXPECT_THROW(minalg::matrix::multiply(m0, m1, m2), std::invalid_argument);
 }
 
-TEST(matrixTest, InvalidMultiplication2)
+TEST(MatrixTest, InvalidMultiplication2)
 {
     minalg::matrix m0(3, 4);
     minalg::matrix m1(4, 1);
@@ -292,7 +292,7 @@ TEST(matrixTest, InvalidMultiplication2)
     EXPECT_THROW(minalg::matrix::multiply(m0, m1, m2), std::invalid_argument);
 }
 
-TEST(matrixTest, ValidHconcat)
+TEST(MatrixTest, ValidHconcat)
 {
     minalg::matrix m0({1.0, 2.0, 3.0, 4.0});
     m0.reshaped({2, 2});
@@ -311,7 +311,7 @@ TEST(matrixTest, ValidHconcat)
     EXPECT_DOUBLE_EQ(m2.at(1, 2), 6.0);
 }
 
-TEST(matrixTest, InvalidHconcat1)
+TEST(MatrixTest, InvalidHconcat1)
 {
     minalg::matrix m0(3, 3);
     minalg::matrix m1(2, 3);
@@ -320,7 +320,7 @@ TEST(matrixTest, InvalidHconcat1)
     EXPECT_THROW(minalg::matrix::hconcat(m0, m1, m2), std::invalid_argument);
 }
 
-TEST(matrixTest, InvalidHconcat2)
+TEST(MatrixTest, InvalidHconcat2)
 {
     minalg::matrix m0(3, 3);
     minalg::matrix m1(3, 3);
@@ -329,7 +329,7 @@ TEST(matrixTest, InvalidHconcat2)
     EXPECT_THROW(minalg::matrix::hconcat(m0, m1, m2), std::invalid_argument);
 }
 
-TEST(matrixTest, Equal)
+TEST(MatrixTest, Equal)
 {
     minalg::matrix m0({1.0, 2.0, 3.0, 4.0});
     m0.reshaped({2, 2});
@@ -346,7 +346,7 @@ TEST(matrixTest, Equal)
     EXPECT_FALSE(m0 == m2);
 }
 
-TEST(matrixTest, IsSymmetric)
+TEST(MatrixTest, IsSymmetric)
 {
     minalg::matrix m0({1.0, 2.0, 2.0, 4.0});
     m0.reshaped({2, 2});
@@ -357,7 +357,7 @@ TEST(matrixTest, IsSymmetric)
     EXPECT_FALSE(m0.is_symmetric());
 }
 
-TEST(matrixTest, IsOrthogonal)
+TEST(MatrixTest, IsOrthogonal)
 {
     const std::vector<double> data =
     {
@@ -373,4 +373,61 @@ TEST(matrixTest, IsOrthogonal)
 
     m0.at(0, 1) = 1e-03;
     EXPECT_FALSE(m0.is_orthogonal());    
+}
+
+TEST(MatrixTest, OperatorMul)
+{
+    const std::vector<double> data = {1, 2, 3, 4};
+    minalg::matrix m0(data);
+    m0.reshaped({2, 2});
+
+    minalg::matrix m1(m0 * 2.0);
+    EXPECT_DOUBLE_EQ(m1.at(0, 0), data[0] * 2.0);
+    EXPECT_DOUBLE_EQ(m1.at(0, 1), data[1] * 2.0);
+    EXPECT_DOUBLE_EQ(m1.at(1, 0), data[2] * 2.0);
+    EXPECT_DOUBLE_EQ(m1.at(1, 1), data[3] * 2.0);
+
+    m0 *= 2.0;
+    EXPECT_DOUBLE_EQ(m0.at(0, 0), data[0] * 2.0);
+    EXPECT_DOUBLE_EQ(m0.at(0, 1), data[1] * 2.0);
+    EXPECT_DOUBLE_EQ(m0.at(1, 0), data[2] * 2.0);
+    EXPECT_DOUBLE_EQ(m0.at(1, 1), data[3] * 2.0);
+}
+
+TEST(MatrixTest, OperatorAdd)
+{
+    const std::vector<double> data = {1, 2, 3, 4};
+    minalg::matrix m0(data);
+    m0.reshaped({2, 2});
+
+    minalg::matrix m1(m0 + 2.0);
+    EXPECT_DOUBLE_EQ(m1.at(0, 0), data[0] + 2.0);
+    EXPECT_DOUBLE_EQ(m1.at(0, 1), data[1] + 2.0);
+    EXPECT_DOUBLE_EQ(m1.at(1, 0), data[2] + 2.0);
+    EXPECT_DOUBLE_EQ(m1.at(1, 1), data[3] + 2.0);
+
+    m0 += 2.0;
+    EXPECT_DOUBLE_EQ(m0.at(0, 0), data[0] + 2.0);
+    EXPECT_DOUBLE_EQ(m0.at(0, 1), data[1] + 2.0);
+    EXPECT_DOUBLE_EQ(m0.at(1, 0), data[2] + 2.0);
+    EXPECT_DOUBLE_EQ(m0.at(1, 1), data[3] + 2.0);
+}
+
+TEST(MatrixTest, OperatorSub)
+{
+    const std::vector<double> data = {1, 2, 3, 4};
+    minalg::matrix m0(data);
+    m0.reshaped({2, 2});
+
+    minalg::matrix m1(m0 - 2.0);
+    EXPECT_DOUBLE_EQ(m1.at(0, 0), data[0] - 2.0);
+    EXPECT_DOUBLE_EQ(m1.at(0, 1), data[1] - 2.0);
+    EXPECT_DOUBLE_EQ(m1.at(1, 0), data[2] - 2.0);
+    EXPECT_DOUBLE_EQ(m1.at(1, 1), data[3] - 2.0);
+
+    m0 -= 2.0;
+    EXPECT_DOUBLE_EQ(m0.at(0, 0), data[0] - 2.0);
+    EXPECT_DOUBLE_EQ(m0.at(0, 1), data[1] - 2.0);
+    EXPECT_DOUBLE_EQ(m0.at(1, 0), data[2] - 2.0);
+    EXPECT_DOUBLE_EQ(m0.at(1, 1), data[3] - 2.0);
 }

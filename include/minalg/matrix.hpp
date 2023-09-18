@@ -311,4 +311,70 @@ inline matrix operator * (const matrix& lhs, const matrix& rhs)
     return matrix::multiply(lhs, rhs);
 }
 
+inline matrix operator * (const matrix& lhs, double factor)
+{
+    matrix m(lhs.shape());
+    const double* src_ptr = &lhs.get(0, 0);
+    double* dst_ptr = &m.get(0, 0);
+    for (std::size_t i = 0; i < m.size(); ++i) {
+        *dst_ptr++ = *src_ptr++ * factor;
+    }
+
+    return m;
+}
+
+inline matrix& operator *= (matrix& lhs, double factor)
+{
+    double* ptr = &lhs.get(0, 0);
+    for (std::size_t i = 0; i < lhs.size(); ++i) {
+        *ptr++ *= factor;
+    }
+
+    return lhs;
+}
+
+inline matrix operator + (const matrix& lhs, double value)
+{
+    matrix m(lhs.shape());
+    const double* src_ptr = &lhs.get(0, 0);
+    double* dst_ptr = &m.get(0, 0);
+    for (std::size_t i = 0; i < m.size(); ++i) {
+        *dst_ptr++ = *src_ptr++ + value;
+    }
+
+    return m;
+}
+
+inline matrix& operator += (matrix& lhs, double value)
+{
+    double* ptr = &lhs.get(0, 0);
+    for (std::size_t i = 0; i < lhs.size(); ++i) {
+        *ptr++ += value;
+    }
+
+    return lhs;
+}
+
+inline matrix operator - (const matrix& lhs, double value)
+{
+    matrix m(lhs.shape());
+    const double* src_ptr = &lhs.get(0, 0);
+    double* dst_ptr = &m.get(0, 0);
+    for (std::size_t i = 0; i < m.size(); ++i) {
+        *dst_ptr++ = *src_ptr++ - value;
+    }
+
+    return m;
+}
+
+inline matrix& operator -= (matrix& lhs, double value)
+{
+    double* ptr = &lhs.get(0, 0);
+    for (std::size_t i = 0; i < lhs.size(); ++i) {
+        *ptr++ -= value;
+    }
+
+    return lhs;
+}
+
 }

@@ -262,14 +262,14 @@ bool matrix::equal(const matrix& m0, const matrix& m1)
     }
 
     if (m0.shape() == m1.shape()) {
-        for (std::size_t row = 0; row < m0.rows(); ++row) {
-            for (std::size_t col = 0; col < m0.columns(); ++col) {
-                const double diff = m0.get(row, col) - m1.get(row, col);
-                if (!near_zero(diff)) {
-                    return false;
-                }
+        const double* m0_ptr = &m0.get(0, 0);
+        const double* m1_ptr = &m1.get(0, 0);
+        for (std::size_t i = 0; i < m0.size(); ++i) {
+            const double diff = *m0_ptr++ - *m1_ptr++;
+            if (!near_zero(diff)) {
+                return false;
             }
-        }
+        }        
 
         return true;
     } else {

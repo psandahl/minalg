@@ -92,6 +92,34 @@ std::tuple<matrix, matrix, matrix> lu_decomp(const matrix& A)
     return { std::move(P), std::move(L), std::move(U) };
 }
 
+double det(const matrix& A)
+{
+    if (!A.is_square()) {
+        throw std::invalid_argument("matrix A must be square");
+    }
+
+    try {
+        const auto [P, L, U] = lu_decomp(A);
+
+        double sum = 0.0;
+        double det = 1.0;
+        for (std::size_t diag = 0; diag < P.rows(); ++diag) {
+            sum += P.get(diag, diag);
+            det *= U.get(diag, diag);
+        }
+
+        // The sign of the determinant changes with permutation.
+        const long diff = P.rows() - static_cast<long>(sum);
+        const long changed_rows = diff - 1;
+        const double sign = diff == 0 || changed_rows % 2 == 0 ? 1.0 : -1.0;
+
+        return sign * det;
+    } catch (const std::invalid_argument&) {
+        // The matrix A is singular - the determinant is zero.
+        return 0.0;
+    }
+}
+
 matrix gaussian_elimination(const matrix& A, const matrix& b)
 {
     // Solve the linear system through Gaussian elimination.

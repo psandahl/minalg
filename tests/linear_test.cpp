@@ -222,7 +222,7 @@ TEST(LinearTest, lu_decomp3)
         2, 7, -8, 9, 3,
         1, -4, 2, 6, 1,
         1, 5, 0, -2, 2,
-        -1, 0, 3, -3, 6
+        -1, 0, 3, -3, 6,
     };
 
     const minalg::matrix A(minalg::matrix(data).reshape({5, 5}));
@@ -231,4 +231,42 @@ TEST(LinearTest, lu_decomp3)
     // Reconstruct A from P, L and U.
     const minalg::matrix AA(P * L * U);
     EXPECT_TRUE(A == AA);
+}
+
+TEST(LinearTest, det)
+{
+    const minalg::matrix m0(minalg::matrix({1, 0, 0, 0, 1, 0, 0, 0, 1}).reshape({3, 3}));
+    EXPECT_DOUBLE_EQ(minalg::linear::det(m0), 1.0);
+
+    const minalg::matrix m1(minalg::matrix({0, 0, 1, 0, 1, 0, 1, 0, 0}).reshape({3, 3}));
+    EXPECT_DOUBLE_EQ(minalg::linear::det(m1), -1.0);
+
+    const minalg::matrix m2(minalg::matrix({0, 1, 0, 0, 0, 1, 1, 0, 0}).reshape({3, 3}));
+    EXPECT_DOUBLE_EQ(minalg::linear::det(m2), 1.0);
+
+    // Compared with numpy.
+    const std::vector<double> data3 =
+    {
+        3, 1, -2, 5, -1,
+        2, 7, -8, 9, 3,
+        0, -4, 2, 6, 1,
+        1, 5, 0, -2, 2,
+        -1, 0, 3, -3, 6,
+    };
+    const minalg::matrix m3(minalg::matrix(data3).reshape({5, 5}));
+    EXPECT_DOUBLE_EQ(minalg::linear::det(m3), -3157.0);
+
+    const std::vector<double> data4 =
+    {
+        -1, 0, 3, -3, 6,        
+        2, 7, -8, 9, 3,
+        0, -4, 2, 6, 1,
+        1, 5, 0, -2, 2,        
+        3, 1, -2, 5, -1,
+    };
+    const minalg::matrix m4(minalg::matrix(data4).reshape({5, 5}));
+    EXPECT_DOUBLE_EQ(minalg::linear::det(m4), -3157.0);
+
+    const minalg::matrix m5(minalg::matrix({0, 1, 0, 0, 0, 1, 0, 0, 1}).reshape({3, 3}));
+    EXPECT_DOUBLE_EQ(minalg::linear::det(m5), 0.0);
 }

@@ -30,4 +30,11 @@ matrix invert(const matrix& A);
 */
 std::tuple<matrix, matrix, matrix> lu_decomp(const matrix& A);
 
+/**
+ * @brief Calculate the determinant of the (square) matrix A.
+ * @param A matrix A.
+ * @return the determinant.
+*/
+double det(const matrix& A);
+
 }}

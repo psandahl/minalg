@@ -55,7 +55,7 @@ matrix gaussian_elimination(const matrix& A, const matrix& b)
         // Read pivot value.
         const double pivot_value = m.at(rows[diag], diag);
         if (near_zero(pivot_value)) {
-            throw std::out_of_range("Singular matrix");
+            throw std::invalid_argument("Singular matrix");
         }
 
         // Normalize pivot row using pivot value to simplify further
@@ -114,7 +114,7 @@ matrix gauss_jordan_elimination(const matrix& A)
         // Read pivot value.
         const double pivot_value = m.at(rows[diag], diag);
         if (near_zero(pivot_value)) {
-            throw std::out_of_range("Singular matrix");
+            throw std::invalid_argument("Singular matrix");
         }
 
         // Normalize pivot row using pivot value to simplify further

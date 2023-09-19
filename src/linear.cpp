@@ -12,7 +12,7 @@ namespace minalg {
 namespace linear {
 
 matrix gaussian_elimination(const matrix& A, const matrix& b);
-static matrix gauss_jordan_elimination(const matrix& A);
+matrix gauss_jordan_elimination(const matrix& A);
 
 matrix solve(const matrix& A, const matrix& b)
 {    
@@ -21,11 +21,24 @@ matrix solve(const matrix& A, const matrix& b)
 
 matrix invert(const matrix& A)
 {
-    if (!A.is_square()) {
-        throw std::invalid_argument("matrix must be square");
+    const std::tuple<matrix, matrix, matrix> PLU(lu_decomp(A));
+
+    matrix A_inv(A.shape());    
+    matrix in(A.rows(), 1);    
+
+    for (std::size_t diag = 0; diag < A_inv.rows(); ++diag) {
+        if (diag > 0) {
+            in.at(diag - 1, 0) = 0.0;
+        }
+        in.at(diag, 0) = 1.0;
+
+        const matrix out(lu_solve(PLU, in));
+        for (std::size_t row = 0; row < A_inv.rows(); ++row) {
+            A_inv.at(row, diag) = out.at(row, 0);
+        }
     }
 
-    return gauss_jordan_elimination(A);
+    return A_inv;    
 }
 
 std::tuple<matrix, matrix, matrix> lu_decomp(const matrix& A)
@@ -38,14 +51,14 @@ std::tuple<matrix, matrix, matrix> lu_decomp(const matrix& A)
 
     // Permuted L and U matrices. As the last step the matrices
     // will be rectified to their normal form.
-    minalg::matrix Lp(A.shape());
-    minalg::matrix Up(A);
+    matrix Lp(A.shape());
+    matrix Up(A);
 
     // Vector with row indices.
     std::vector<std::size_t> rows(index_vector(Up.rows()));
 
     // Iterate the diagonal and find pivot elements in U.
-    for (std::size_t diag = 0; diag < rows.size() - 1; ++diag) {
+    for (std::size_t diag = 0; diag < rows.size(); ++diag) {
         const std::size_t pivot_row_index = find_pivot_row_index(diag, Up, rows);
         std::swap(rows[pivot_row_index], rows[diag]);        
 
@@ -66,15 +79,15 @@ std::tuple<matrix, matrix, matrix> lu_decomp(const matrix& A)
 
     // Create the permutation matrix P. P is usable for reconstructing
     // A = P * L * U.
-    minalg::matrix P(A.shape());
+    matrix P(A.shape());
     for (std::size_t i = 0; i < rows.size(); ++i) {
         P.get(rows[i], i) = 1.0;
     }
 
     // But to rectify L and U, P's transpose must be used.
-    const minalg::matrix Pt(P.transpose());
-    minalg::matrix L(Pt * Lp);
-    const minalg::matrix U(Pt * Up);
+    const matrix Pt(P.transpose());
+    matrix L(Pt * Lp);
+    const matrix U(Pt * Up);
 
     // Fill in the diagonal for L.
     for (std::size_t diag = 0; diag < L.rows(); ++diag) {

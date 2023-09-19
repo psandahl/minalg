@@ -5,8 +5,6 @@
 
 #include <gtest/gtest.h>
 
-#include <iostream>
-
 TEST(LinearTest, Solve1)
 {
     const minalg::matrix A(minalg::matrix({-3, 2, -1, 6, -6, 7, 3, -4, 4}).reshape({3, 3}));
@@ -139,7 +137,7 @@ TEST(LinearTest, Invert2)
 TEST(LinearTest, InvalidInvert)
 {
     const minalg::matrix A(minalg::matrix({0, 1, 2, 3, 4, 5, 6, 7, 8}).reshape({3, 3}));
-    EXPECT_THROW(minalg::linear::invert(A), minalg::linear::singular_matrix);
+    EXPECT_THROW(minalg::linear::invert(A), minalg::linear::singular_matrix);    
 }
 
 TEST(LinearTest, LuDecomp1)

@@ -11,19 +11,12 @@
 namespace minalg {
 namespace linear {
 
-static matrix gaussian_elimination(const matrix& A, const matrix& b);
+matrix gaussian_elimination(const matrix& A, const matrix& b);
 static matrix gauss_jordan_elimination(const matrix& A);
 
 matrix solve(const matrix& A, const matrix& b)
-{
-    if (!A.is_square()) {
-        throw std::invalid_argument("matrix A must be square");
-    }
-    if (b.columns() != 1 || b.rows() != A.rows()) {
-        throw std::invalid_argument("matrix b must be column matrix with same number of rows as A");
-    }
-
-    return gaussian_elimination(A, b);
+{    
+    return lu_solve(lu_decomp(A), b);
 }
 
 matrix invert(const matrix& A)

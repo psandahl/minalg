@@ -25,9 +25,9 @@ public:
 
 /**
  * @brief Solve the linear system Ax=b.
- * @param A matrix A.
- * @param b matrix b.
- * @return matrix x.
+ * @param A square matrix A.
+ * @param b single column matrix b.
+ * @return single column matrix x with solution.
 */
 matrix solve(const matrix& A, const matrix& b);
 

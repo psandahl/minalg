@@ -193,7 +193,6 @@ TEST(LinearTest, LuDecomp1)
     EXPECT_NEAR(U.at(2, 2), -0.2, 1e-15);
 }
 
-
 TEST(LinearTest, LuDecomp2)
 {    
     const std::vector<double> data =
@@ -210,7 +209,6 @@ TEST(LinearTest, LuDecomp2)
     const minalg::matrix AA(P * L * U);
     EXPECT_TRUE(A == AA);
 }
-
 
 TEST(LinearTest, LuDecomp3)
 {    

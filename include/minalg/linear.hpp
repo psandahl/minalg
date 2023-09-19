@@ -56,7 +56,7 @@ std::tuple<matrix, matrix, matrix> lu_decomp(const matrix& A);
 matrix lu_solve(const std::tuple<matrix, matrix, matrix>& PLU, const matrix& b);
 
 /**
- * @brief Calculate the determinant of the (square) matrix A.
+ * @brief Calculate the determinant of the square matrix A.
  * @param A matrix A.
  * @return the determinant.
 */

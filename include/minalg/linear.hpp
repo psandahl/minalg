@@ -47,6 +47,15 @@ matrix invert(const matrix& A);
 std::tuple<matrix, matrix, matrix> lu_decomp(const matrix& A);
 
 /**
+ * @brief Solve the linear system P(LU)x=b. P, L and U can be made from
+ * square matrix A through lu_decomp.
+ * @param PLU tuple with matrices P, L and U.
+ * @param b single column matrix b.
+ * @return single column matrix x.
+*/
+matrix lu_solve(const std::tuple<matrix, matrix, matrix>& PLU, const matrix& b);
+
+/**
  * @brief Calculate the determinant of the (square) matrix A.
  * @param A matrix A.
  * @return the determinant.

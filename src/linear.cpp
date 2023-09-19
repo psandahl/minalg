@@ -92,6 +92,49 @@ std::tuple<matrix, matrix, matrix> lu_decomp(const matrix& A)
     return { std::move(P), std::move(L), std::move(U) };
 }
 
+matrix lu_solve(const std::tuple<matrix, matrix, matrix>& PLU, const matrix& b)
+{
+    const auto [P, L, U] = PLU;
+
+    if (!P.is_square() || !L.is_square() || !U.is_square()) {
+        throw std::invalid_argument("P, L and U must be square");
+    }
+
+    if (P.shape() != L.shape() || P.shape() != U.shape()) {
+        throw std::invalid_argument("P, L and U must have same shape");
+    }
+
+    if (b.rows() != L.rows() || b.columns() != 1) {
+        throw std::invalid_argument("b must be column vector same height as L");
+    }
+
+    // Step 1. Forward substitution using L and b: Ly = b.
+    // Assume L has ones on the diagonal during the forward substitution.
+    minalg::matrix bp(P * b);
+    minalg::matrix y(bp.shape());    
+
+    for (std::size_t diag = 0; diag < L.rows(); ++diag) {
+        double value = bp.at(diag, 0);
+        for (std::size_t i = 0; i < diag; ++i) {
+            value -= L.at(diag, i) * y.at(i, 0);
+        }
+        y.at(diag, 0) = value;
+    }    
+
+    // Step 2. Backward substitution using U and y: Ux = y.
+    minalg::matrix x(y.shape());
+
+    for (int diag = U.rows() - 1; diag >= 0; --diag) {        
+        double value = y.at(diag, 0);        
+        for (int i = U.columns() - 1; i > diag; --i) {            
+            value -= U.at(diag, i) * x.at(i, 0);
+        }        
+        x.at(diag, 0) = value / U.at(diag, diag);
+    }    
+
+    return x;
+}
+
 double det(const matrix& A)
 {
     if (!A.is_square()) {

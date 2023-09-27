@@ -113,11 +113,11 @@ matrix lu_solve(const std::tuple<matrix, matrix, matrix>& PLU, const matrix& b)
 
     // Step 1. Forward substitution using L and b: Ly = b.
     // Assume L has ones on the diagonal during the forward substitution.
-    minalg::matrix bp(P * b);
-    minalg::matrix y(bp.shape());    
+    minalg::matrix Pb(P * b); // Apply permutation on b.
+    minalg::matrix y(Pb.shape());    
 
     for (std::size_t diag = 0; diag < L.rows(); ++diag) {
-        double value = bp.at(diag, 0);
+        double value = Pb.at(diag, 0);
         for (std::size_t i = 0; i < diag; ++i) {
             value -= L.at(diag, i) * y.at(i, 0);
         }

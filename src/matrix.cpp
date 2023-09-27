@@ -144,7 +144,7 @@ std::vector<double> matrix::diag(const matrix& m)
     return vec;
 }
 
-void matrix::reshape(matrix& m, const std::tuple<std::size_t, std::size_t>& shape)
+void matrix::reshape(matrix& m, const shape_t& shape)
 {
     const auto [rows, columns] = shape;
     if (m.size() != rows * columns) {

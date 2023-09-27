@@ -9,6 +9,11 @@
 namespace minalg {
 
 /**
+ * @brief Shape type (alias for tuple with two size_t - rows and columns).
+*/
+typedef std::tuple<std::size_t, std::size_t> shape_t;
+
+/**
 * @brief Simple and straightforward matrix class. Doubles only.
 */
 class matrix {
@@ -24,7 +29,7 @@ public:
      * @brief Create a zero initialized matrix with given shape.
      * @param shape the shape.     
     */
-    matrix(const std::tuple<std::size_t, std::size_t>& shape):
+    matrix(const shape_t& shape):
         matrix(std::get<0>(shape), std::get<1>(shape))
     {}
 
@@ -83,7 +88,7 @@ public:
      * @brief Get the shape of the matrix.
      * @return tuple<rows, columns>.
     */
-    std::tuple<std::size_t, std::size_t> shape() const {
+    shape_t shape() const {
         return { rows(), columns() };
     }
 
@@ -160,7 +165,7 @@ public:
      * @param shape new shape.
      * @return this matrix.
     */
-    matrix& reshaped(const std::tuple<std::size_t, std::size_t>& shape) {
+    matrix& reshaped(const shape_t& shape) {
         reshape(*this, shape);
         return *this;
     }
@@ -170,7 +175,7 @@ public:
      * @param shape new shape.
      * @return reshaped matrix.
     */
-    matrix reshape(const std::tuple<std::size_t, std::size_t>& shape) const {
+    matrix reshape(const shape_t& shape) const {
         matrix m(*this);
         reshape(m, shape);
 
@@ -231,7 +236,7 @@ public:
      * @param m matrix to reshape.
      * @param shape new shape.
     */
-    static void reshape(matrix& m, const std::tuple<std::size_t, std::size_t>& shape);
+    static void reshape(matrix& m, const shape_t& shape);
 
     /**
      * @brief Transpose m0 into m1.

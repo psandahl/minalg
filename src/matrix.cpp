@@ -177,35 +177,6 @@ matrix matrix::transpose(const matrix& m)
 
     return m1;
 }
-    
-matrix matrix::slice(const matrix& m0, const shape_t& upper_left, 
-                     const shape_t& lower_right)
-{
-    const auto [rows0, columns0] = m0.shape();
-    const auto [rows_ul, columns_ul] = upper_left;
-    const auto [rows_lr, columns_lr] = lower_right;
-
-    if (rows_lr < rows_ul || columns_lr < columns_ul) {
-        throw std::invalid_argument("Lower right cannot be less than upper left");
-    }
-
-    if (rows_lr >= rows0 || columns_lr >= columns0) {
-        throw std::invalid_argument("Lower right cannot be greater than source matrix shape");
-    }
-
-    const std::size_t rows1 = rows_lr - rows_ul + 1;
-    const std::size_t columns1 = columns_lr - columns_ul + 1;
-    matrix m1(rows1, columns1);
-
-    // TODO: optimize.
-    for (std::size_t row = 0; row < rows1; ++row) {
-        for (std::size_t column = 0; column < columns1; ++column) {
-            m1.at(row, column) = m0.at(rows_ul + row, columns_ul + column);
-        }
-    }
-
-    return m1;
-}
 
 void matrix::scale_row(std::size_t row, double factor)
 {
@@ -266,7 +237,7 @@ void matrix::hconcat(const matrix& m0, const matrix& m1, matrix& m2)
     }
 
     for (std::size_t row = 0; row < rows0; ++row) {
-        double *dst = &m2.at(row, 0);
+        double *dst = &m2.get(row, 0);
         const double *src = &m0.get(row, 0);
         std::memcpy(dst, src, columns0 * sizeof(double));
 
@@ -282,6 +253,34 @@ matrix matrix::hconcat(const matrix& m0, const matrix& m1)
     hconcat(m0, m1, m2);
 
     return m2;
+}
+
+matrix matrix::slice(const matrix& m0, const shape_t& upper_left, 
+                     const shape_t& lower_right)
+{
+    const auto [rows0, columns0] = m0.shape();
+    const auto [rows_ul, columns_ul] = upper_left;
+    const auto [rows_lr, columns_lr] = lower_right;
+
+    if (rows_lr < rows_ul || columns_lr < columns_ul) {
+        throw std::invalid_argument("Lower right cannot be less than upper left");
+    }
+
+    if (rows_lr >= rows0 || columns_lr >= columns0) {
+        throw std::invalid_argument("Lower right cannot be greater than source matrix shape");
+    }
+
+    const std::size_t rows1 = rows_lr - rows_ul + 1;
+    const std::size_t columns1 = columns_lr - columns_ul + 1;
+    matrix m1(rows1, columns1);
+    
+    for (std::size_t row = 0; row < rows1; ++row) {
+        const double *src = &m0.get(rows_ul + row, columns_ul);
+        double *dst = &m1.get(row, 0);
+        std::memcpy(dst, src, columns1 * sizeof(double));        
+    }
+
+    return m1;
 }
 
 bool matrix::equal(const matrix& m0, const matrix& m1)

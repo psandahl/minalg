@@ -189,6 +189,16 @@ public:
     matrix transpose() const { return transpose(*this); }
 
     /**
+     * @brief Slice this matrix.     
+     * @param upper_left shape describing the upper leftmost point for slicing.
+     * @param lower_right shape describing the lower rightmost point.
+     * @return the sliced copy.
+    */
+    matrix slice(const shape_t& upper_left, const shape_t& lower_right) const {
+        return slice(*this, upper_left, lower_right);
+    }
+
+    /**
      * @brief Multiply the given row with a scale factor.
      * @param row the row number.
      * @param factor the factor to scale the row.
@@ -282,6 +292,16 @@ public:
      * @return concatenated matrix.
     */
     static matrix hconcat(const matrix& m0, const matrix& m1);
+    
+    /**
+     * @brief Slice the given matrix.
+     * @param m the matrix to slice.
+     * @param upper_left shape describing the upper leftmost point for slicing.
+     * @param lower_right shape describing the lower rightmost point.
+     * @return the sliced copy.
+    */
+    static matrix slice(const matrix& m, const shape_t& upper_left, 
+                        const shape_t& lower_right);
 
     /**
      * @brief Check whether two matrices are equal.

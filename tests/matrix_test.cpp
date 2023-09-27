@@ -230,6 +230,36 @@ TEST(MatrixTest, InvalidTranspose)
     EXPECT_THROW(minalg::matrix::transpose(m0, m1), std::invalid_argument);
 }
 
+TEST(MatrixTest, ValidSlice)
+{
+    minalg::matrix m0({1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0});
+    m0.reshaped({3, 3});
+
+    minalg::matrix m1(m0.slice({0, 0}, {2, 0}));
+    EXPECT_EQ(m1.rows(), 3);
+    EXPECT_EQ(m1.columns(), 1);
+    EXPECT_DOUBLE_EQ(m1.at(0, 0), 1.0);
+    EXPECT_DOUBLE_EQ(m1.at(1, 0), 4.0);
+    EXPECT_DOUBLE_EQ(m1.at(2, 0), 7.0);
+
+    minalg::matrix m2(m0.slice({1, 1}, {2, 2}));
+    EXPECT_EQ(m2.rows(), 2);
+    EXPECT_EQ(m2.columns(), 2);
+    EXPECT_DOUBLE_EQ(m2.at(0, 0), 5.0);
+    EXPECT_DOUBLE_EQ(m2.at(0, 1), 6.0);
+    EXPECT_DOUBLE_EQ(m2.at(1, 0), 8.0);
+    EXPECT_DOUBLE_EQ(m2.at(1, 1), 9.0);
+}
+
+TEST(MatrixTest, InvalidSlice)
+{
+    minalg::matrix m0({1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0});
+    m0.reshaped({3, 3});
+
+    EXPECT_THROW(m0.slice({2, 2}, {1, 1}), std::invalid_argument);
+    EXPECT_THROW(m0.slice({1, 1}, {3, 2}), std::invalid_argument);
+}
+
 TEST(MatrixTest, DotProduct)
 {
     minalg::matrix m({1.0, 2.0, 3.0}); // Column matrix.

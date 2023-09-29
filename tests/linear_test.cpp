@@ -398,4 +398,23 @@ TEST(LinearTest, Eigvals1)
     EXPECT_NEAR(evals[0], 18.50673941, 1e-08);
     EXPECT_NEAR(evals[1], 8.2001314, 1e-08);
     EXPECT_NEAR(evals[2], 2.29312919, 1e-08);
+
+    // TODO: Property check with determinant.
+}
+
+TEST(LinearTest, Eigvals2)
+{
+    // Non symmetric matrix.
+    minalg::matrix A({0.5, 0.75, 0.5, 1., 0.5, 0.75, 0.25, 0.25, 0.25});
+    A.reshaped({3, 3});
+
+    const std::vector<double> evals(minalg::linear::eigvals(A));
+    EXPECT_EQ(evals.size(), A.rows());
+
+    // Comparing with results from Octave/numpy.
+    EXPECT_NEAR(evals[0], 1.5962551, 1e-08);
+    EXPECT_NEAR(evals[1], -0.37253087, 1e-08);
+    EXPECT_NEAR(evals[2], 0.02627577, 1e-08);
+
+    // TODO: Property check with determinant.
 }

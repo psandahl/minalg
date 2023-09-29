@@ -427,6 +427,31 @@ TEST(MatrixTest, IsOrthogonal)
     EXPECT_FALSE(m0.is_orthogonal());    
 }
 
+TEST(MatrixTest, IsUpperTriangular)
+{
+    const std::vector<double> data =
+    {
+        1, 0, 0,
+        0, 1, 0,
+        0, 0, 1
+    };
+
+    minalg::matrix m0(data);    
+    EXPECT_FALSE(m0.is_upper_triangular());
+
+    m0.reshaped({3, 3});
+    EXPECT_TRUE(m0.is_upper_triangular());
+
+    m0.at(1, 1) = 0;
+    EXPECT_FALSE(m0.is_upper_triangular());
+
+    m0.at(1, 1) = 1;
+    EXPECT_TRUE(m0.is_upper_triangular());
+
+    m0.at(2, 0) = 0.00001;
+    EXPECT_FALSE(m0.is_upper_triangular());
+}
+
 TEST(MatrixTest, OperatorMulVal)
 {
     const std::vector<double> data = {1, 2, 3, 4};

@@ -127,6 +127,12 @@ public:
     }
 
     /**
+     * @brief Check whether the matrix is upper triangular.
+     * @return boolean value.
+    */
+    bool is_upper_triangular() const;
+
+    /**
      * @brief Non range checked access to matrix element.
      * @param row the row.
      * @param column the column.

@@ -102,6 +102,29 @@ double matrix::norm() const
     return std::sqrt(sum);
 }
 
+bool matrix::is_upper_triangular() const
+{
+    if (!is_square()) {
+        return false;
+    }
+
+    for (std::size_t diag = 0; diag < rows(); ++diag) {
+        if (near_zero(get(diag, diag))) {
+            // Diagonal elements must not be near zero.
+            return false;
+        }
+
+        for (std::size_t row = diag + 1; row < rows(); ++row) {
+            if (!near_zero(get(row, diag))) {
+                // Values below diagonal must be near zero.
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
 std::string matrix::info(std::streamsize precision) const
 {
     std::stringstream ss;

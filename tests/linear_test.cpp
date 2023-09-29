@@ -331,15 +331,15 @@ TEST(LinearTest, QrDecomp2)
     // is inspired by a Matlab example.
     EXPECT_NEAR(Q.at(0, 0),  -0.12309, 1e-05);
     EXPECT_NEAR(Q.at(0, 1),  0.90453, 1e-05);
-    EXPECT_NEAR(Q.at(0, 2),  -0.40825, 1e-05); // Differ in sign.
+    EXPECT_NEAR(Q.at(0, 2),  0.40825, 1e-05);
 
     EXPECT_NEAR(Q.at(1, 0),  -0.49237, 1e-05);
     EXPECT_NEAR(Q.at(1, 1),  0.30151, 1e-05);
-    EXPECT_NEAR(Q.at(1, 2),  0.81650, 1e-05); // Differ in sign.
+    EXPECT_NEAR(Q.at(1, 2),  -0.81650, 1e-05);
 
     EXPECT_NEAR(Q.at(2, 0),  -0.86164, 1e-05);
     EXPECT_NEAR(Q.at(2, 1),  -0.30151, 1e-05);
-    EXPECT_NEAR(Q.at(2, 2),  -0.40825, 1e-05); // Differ in sign.
+    EXPECT_NEAR(Q.at(2, 2),  0.40825, 1e-05);
 
     EXPECT_NEAR(R.at(0, 0),  -8.12404, 1e-05);
     EXPECT_NEAR(R.at(0, 1),  -9.60114, 1e-05);

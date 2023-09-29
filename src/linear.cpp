@@ -180,7 +180,8 @@ std::tuple<matrix, matrix> qr_decomp(const matrix& A)
     matrix R(A);
 
     // Traverse the diagonal of R and calculate the Householder reflector.
-    for (std::size_t diag = 0; diag < columns; ++diag) {
+    const std::size_t max_diag = A.is_square() ? columns - 1 : columns;
+    for (std::size_t diag = 0; diag < max_diag; ++diag) {
         const matrix z(R.slice({diag, diag}, {rows - 1, diag}));
 
         matrix e(z.shape());

@@ -400,13 +400,14 @@ TEST(MatrixTest, Equal)
 
 TEST(MatrixTest, IsSymmetric)
 {
-    minalg::matrix m0({1.0, 2.0, 2.0, 4.0});
-    m0.reshaped({2, 2});
+    minalg::matrix m0({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16});
+    m0 *= 1.002;    
+    m0.reshaped({4, 4});    
 
-    EXPECT_TRUE(m0.is_symmetric());
-
-    m0.at(1, 0) = 3.0;
     EXPECT_FALSE(m0.is_symmetric());
+
+    const minalg::matrix m1(m0.transpose() * m0);    
+    EXPECT_TRUE(m1.is_symmetric());
 }
 
 TEST(MatrixTest, IsOrthogonal)

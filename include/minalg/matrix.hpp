@@ -114,9 +114,7 @@ public:
      * @brief Check whether the matrix is symmetric.
      * @return boolean value.
     */
-    bool is_symmetric() const { 
-        return is_square() && equal(*this, transpose());    
-    }
+    bool is_symmetric() const;
 
     /**
      * @brief Check whether the matrix is orthogonal.

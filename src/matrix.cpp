@@ -102,6 +102,29 @@ double matrix::norm() const
     return std::sqrt(sum);
 }
 
+bool matrix::is_symmetric() const
+{
+    if (!is_square()) {
+        return false;
+    }    
+
+    // No need to test last diagonal.
+    for (std::size_t diag = 0; diag < rows() - 1; ++diag) {
+        const double* col_ptr = &get(diag + 1, diag);
+        const double* row_ptr = &get(diag, diag + 1);
+        for (std::size_t i = diag + 1; i < rows(); ++i) {
+            const double diff = *col_ptr - *row_ptr;     
+            if (!near_zero(diff)) {
+                return false;
+            }
+            col_ptr += columns();
+            ++row_ptr;
+        }
+    }
+
+    return true;
+}
+
 bool matrix::is_upper_triangular() const
 {
     if (!is_square()) {

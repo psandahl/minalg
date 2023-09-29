@@ -4,6 +4,7 @@
 
 #include <stdexcept>
 #include <tuple>
+#include <vector>
 
 namespace minalg {
 namespace linear {
@@ -65,7 +66,16 @@ double det(const matrix& A);
 /**
  * @brief Perform QR decomposition of the (square or tall) matrix A into the 
  * matrices Q (orthogonal matrix) and R (upper triangular matrix).
+ * @param A the matrix to decompose.
+ * @return tuple<Q, R>.
 */
 std::tuple<matrix, matrix> qr_decomp(const matrix& A);
+
+/**
+ * @brief Calculate the eigenvalues of the square matrix A.
+ * @param A matrix A.
+ * @return vector with eigenvalues.
+*/
+std::vector<double> eigvals(const matrix& A);
 
 }}

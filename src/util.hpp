@@ -13,7 +13,20 @@ class matrix;
  * @param value the value to check.
  * @return boolean value.
 */
-inline bool near_zero(double value) { return std::fabs(value) < 1e-07; }
+inline bool near_zero(double value, double eps=1e-07) 
+{ 
+    return std::fabs(value) < eps; 
+}
+
+/**
+ * @brief Extract the sign from the value.
+ * @return the sign for the value (-1 if negative, 1 if positive. 0 if zero).
+*/
+inline double sign(double value)
+{
+    if (near_zero(value, 1e-09)) return 0.0;
+    return value < 0.0 ? -1.0 : 1.0;
+}
 
 /**
  * @brief Compute the inner product between a row in matrix m0 and

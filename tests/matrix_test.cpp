@@ -427,7 +427,7 @@ TEST(MatrixTest, IsOrthogonal)
     EXPECT_FALSE(m0.is_orthogonal());    
 }
 
-TEST(MatrixTest, OperatorMul)
+TEST(MatrixTest, OperatorMulVal)
 {
     const std::vector<double> data = {1, 2, 3, 4};
     minalg::matrix m0(data);
@@ -446,7 +446,30 @@ TEST(MatrixTest, OperatorMul)
     EXPECT_DOUBLE_EQ(m0.at(1, 1), data[3] * 2.0);
 }
 
-TEST(MatrixTest, OperatorAdd)
+TEST(MatrixTest, OperatorAddMat)
+{
+    const std::vector<double> lhs_data = {2, 3, 4, 5};
+    const std::vector<double> rhs_data = {1, 2, 3, 4};
+
+    minalg::matrix lhs(lhs_data);    
+    const minalg::matrix rhs(rhs_data);
+
+    const minalg::matrix res(lhs + rhs);
+    EXPECT_EQ(res.shape(), lhs.shape());        
+
+    EXPECT_DOUBLE_EQ(res.at(0, 0), lhs.at(0, 0) + rhs.at(0, 0));
+    EXPECT_DOUBLE_EQ(res.at(1, 0), lhs.at(1, 0) + rhs.at(1, 0));
+    EXPECT_DOUBLE_EQ(res.at(2, 0), lhs.at(2, 0) + rhs.at(2, 0));
+    EXPECT_DOUBLE_EQ(res.at(3, 0), lhs.at(3, 0) + rhs.at(3, 0));
+
+    lhs += rhs;
+    EXPECT_DOUBLE_EQ(lhs.at(0, 0), res.at(0, 0));
+    EXPECT_DOUBLE_EQ(lhs.at(1, 0), res.at(1, 0));
+    EXPECT_DOUBLE_EQ(lhs.at(2, 0), res.at(2, 0));
+    EXPECT_DOUBLE_EQ(lhs.at(3, 0), res.at(3, 0));
+}
+
+TEST(MatrixTest, OperatorAddVal)
 {
     const std::vector<double> data = {1, 2, 3, 4};
     minalg::matrix m0(data);
@@ -465,7 +488,30 @@ TEST(MatrixTest, OperatorAdd)
     EXPECT_DOUBLE_EQ(m0.at(1, 1), data[3] + 2.0);
 }
 
-TEST(MatrixTest, OperatorSub)
+TEST(MatrixTest, OperatorSubMat)
+{
+    const std::vector<double> lhs_data = {2, 3, 4, 5};
+    const std::vector<double> rhs_data = {1, 2, 3, 4};
+
+    minalg::matrix lhs(lhs_data);    
+    const minalg::matrix rhs(rhs_data);
+
+    const minalg::matrix res(lhs - rhs);
+    EXPECT_EQ(res.shape(), lhs.shape());        
+
+    EXPECT_DOUBLE_EQ(res.at(0, 0), lhs.at(0, 0) - rhs.at(0, 0));
+    EXPECT_DOUBLE_EQ(res.at(1, 0), lhs.at(1, 0) - rhs.at(1, 0));
+    EXPECT_DOUBLE_EQ(res.at(2, 0), lhs.at(2, 0) - rhs.at(2, 0));
+    EXPECT_DOUBLE_EQ(res.at(3, 0), lhs.at(3, 0) - rhs.at(3, 0));
+
+    lhs -= rhs;
+    EXPECT_DOUBLE_EQ(lhs.at(0, 0), res.at(0, 0));
+    EXPECT_DOUBLE_EQ(lhs.at(1, 0), res.at(1, 0));
+    EXPECT_DOUBLE_EQ(lhs.at(2, 0), res.at(2, 0));
+    EXPECT_DOUBLE_EQ(lhs.at(3, 0), res.at(3, 0));
+}
+
+TEST(MatrixTest, OperatorSubVal)
 {
     const std::vector<double> data = {1, 2, 3, 4};
     minalg::matrix m0(data);

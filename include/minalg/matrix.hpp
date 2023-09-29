@@ -364,6 +364,38 @@ inline matrix& operator *= (matrix& lhs, double factor)
     return lhs;
 }
 
+inline matrix operator + (const matrix& lhs, const matrix& rhs)
+{
+    if (lhs.shape() != rhs.shape()) {
+        throw std::invalid_argument("Both matrices must have same shape");
+    }
+
+    matrix m(lhs.shape());
+    double* dst_ptr = &m.get(0, 0);
+    const double* lhs_ptr = &lhs.get(0, 0);
+    const double* rhs_ptr = &rhs.get(0, 0);
+    for (std::size_t i = 0; i < lhs.size(); ++i) {
+        *dst_ptr++ = *lhs_ptr++ + *rhs_ptr++;
+    }
+
+    return m;
+}
+
+inline matrix& operator += (matrix& lhs, const matrix& rhs)
+{
+    if (lhs.shape() != rhs.shape()) {
+        throw std::invalid_argument("Both matrices must have same shape");
+    }
+
+    double* dst_ptr = &lhs.get(0, 0);
+    const double* src_ptr = &rhs.get(0, 0);
+    for (std::size_t i = 0; i < lhs.size(); ++i) {
+        *dst_ptr++ += *src_ptr++;
+    }
+
+    return lhs;
+}
+
 inline matrix operator + (const matrix& lhs, double value)
 {
     matrix m(lhs.shape());
@@ -381,6 +413,38 @@ inline matrix& operator += (matrix& lhs, double value)
     double* ptr = &lhs.get(0, 0);
     for (std::size_t i = 0; i < lhs.size(); ++i) {
         *ptr++ += value;
+    }
+
+    return lhs;
+}
+
+inline matrix operator - (const matrix& lhs, const matrix& rhs)
+{
+    if (lhs.shape() != rhs.shape()) {
+        throw std::invalid_argument("Both matrices must have same shape");
+    }
+
+    matrix m(lhs.shape());
+    double* dst_ptr = &m.get(0, 0);
+    const double* lhs_ptr = &lhs.get(0, 0);
+    const double* rhs_ptr = &rhs.get(0, 0);
+    for (std::size_t i = 0; i < lhs.size(); ++i) {
+        *dst_ptr++ = *lhs_ptr++ - *rhs_ptr++;
+    }
+
+    return m;
+}
+
+inline matrix& operator -= (matrix& lhs, const matrix& rhs)
+{
+    if (lhs.shape() != rhs.shape()) {
+        throw std::invalid_argument("Both matrices must have same shape");
+    }
+
+    double* dst_ptr = &lhs.get(0, 0);
+    const double* src_ptr = &rhs.get(0, 0);
+    for (std::size_t i = 0; i < lhs.size(); ++i) {
+        *dst_ptr++ -= *src_ptr++;
     }
 
     return lhs;

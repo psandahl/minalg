@@ -275,9 +275,38 @@ TEST(LinearTest, QrDecomp1)
     const auto [Q, R] = minalg::linear::qr_decomp(A);
     EXPECT_EQ(Q.rows(), 3);
     EXPECT_EQ(Q.columns(), 3);
-
     EXPECT_EQ(R.rows(), 3);
     EXPECT_EQ(R.columns(), 2);
+
+    // Reconstruct from Q * R.
+    const minalg::matrix AA(Q * R);
+    EXPECT_TRUE(A == AA);
+
+    // Q shall be orthogonal.
+    EXPECT_TRUE(Q.is_orthogonal());
+
+    // Specific values for Q and R. Taken from Octave, as the implementation
+    // is inspired by a Matlab example.
+    EXPECT_NEAR(Q.at(0, 0),  -0.16903, 1e-05);
+    EXPECT_NEAR(Q.at(0, 1),  0.89709, 1e-05);
+    EXPECT_NEAR(Q.at(0, 2),  0.40825, 1e-05);
+
+    EXPECT_NEAR(Q.at(1, 0),  -0.50709, 1e-05);
+    EXPECT_NEAR(Q.at(1, 1),  0.27603, 1e-05);
+    EXPECT_NEAR(Q.at(1, 2),  -0.81650, 1e-05);
+
+    EXPECT_NEAR(Q.at(2, 0),  -0.84515, 1e-05);
+    EXPECT_NEAR(Q.at(2, 1),  -0.34503, 1e-05);
+    EXPECT_NEAR(Q.at(2, 2),  0.40825, 1e-05);
+
+    EXPECT_NEAR(R.at(0, 0), -5.91608, 1e-05);
+    EXPECT_NEAR(R.at(0, 1), -7.43736, 1e-05);
+
+    EXPECT_DOUBLE_EQ(R.at(1, 0), 0.0);
+    EXPECT_NEAR(R.at(1, 1), 0.82808, 1e-05);
+
+    EXPECT_DOUBLE_EQ(R.at(2, 0), 0.0);
+    EXPECT_DOUBLE_EQ(R.at(2, 1), 0.0);
 }
 
 TEST(LinearTest, QrDecomp2)
@@ -288,9 +317,41 @@ TEST(LinearTest, QrDecomp2)
     const auto [Q, R] = minalg::linear::qr_decomp(A);
     EXPECT_EQ(Q.rows(), 3);
     EXPECT_EQ(Q.columns(), 3);
-
     EXPECT_EQ(R.rows(), 3);
     EXPECT_EQ(R.columns(), 3);
+
+    // Reconstruct from Q * R.
+    const minalg::matrix AA(Q * R);
+    EXPECT_TRUE(A == AA);
+
+    // Q shall be orthogonal.
+    EXPECT_TRUE(Q.is_orthogonal());
+
+    // Specific values for Q and R. Taken from Octave, as the implementation
+    // is inspired by a Matlab example.
+    EXPECT_NEAR(Q.at(0, 0),  -0.12309, 1e-05);
+    EXPECT_NEAR(Q.at(0, 1),  0.90453, 1e-05);
+    EXPECT_NEAR(Q.at(0, 2),  -0.40825, 1e-05); // Differ in sign.
+
+    EXPECT_NEAR(Q.at(1, 0),  -0.49237, 1e-05);
+    EXPECT_NEAR(Q.at(1, 1),  0.30151, 1e-05);
+    EXPECT_NEAR(Q.at(1, 2),  0.81650, 1e-05); // Differ in sign.
+
+    EXPECT_NEAR(Q.at(2, 0),  -0.86164, 1e-05);
+    EXPECT_NEAR(Q.at(2, 1),  -0.30151, 1e-05);
+    EXPECT_NEAR(Q.at(2, 2),  -0.40825, 1e-05); // Differ in sign.
+
+    EXPECT_NEAR(R.at(0, 0),  -8.12404, 1e-05);
+    EXPECT_NEAR(R.at(0, 1),  -9.60114, 1e-05);
+    EXPECT_NEAR(R.at(0, 2),  -11.07823, 1e-05);
+
+    EXPECT_DOUBLE_EQ(R.at(1, 0), 0.0);
+    EXPECT_NEAR(R.at(1, 1),  0.90453, 1e-05);
+    EXPECT_NEAR(R.at(1, 2),  1.80907, 1e-05);
+
+    EXPECT_DOUBLE_EQ(R.at(2, 0), 0.0);
+    EXPECT_DOUBLE_EQ(R.at(2, 1), 0.0);
+    EXPECT_NEAR(R.at(2, 2), -0.0, 1e-05);
 }
 
 TEST(LinearTest, InvalidQrDecomp)

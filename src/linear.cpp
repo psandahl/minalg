@@ -8,6 +8,8 @@
 #include <cstring>
 #include <vector>
 
+#include <iostream>
+
 namespace minalg {
 namespace linear {
 
@@ -173,11 +175,56 @@ std::tuple<matrix, matrix> qr_decomp(const matrix& A)
         throw std::invalid_argument("matrix must be tall or square");
     }
 
+    // Create matrices, where R is a copy of A.
     matrix Q(matrix::eye(rows));
     matrix R(A);
 
+    // Traverse the diagonal of R and calculate the Householder reflector.
+    for (std::size_t diag = 0; diag < columns; ++diag) {
+        const matrix z(R.slice({diag, diag}, {rows - 1, diag}));
+
+        matrix e(z.shape());
+        e.at(0, 0) = 1.0;
+
+        matrix v(e * z.norm() * -sign(z.at(0, 0)) - z);
+        v *= 1.0 / v.norm();
+
+        //std::cout << "z=" << z.info() << std::endl;
+        //std::cout << "e=" << e.info() << std::endl;
+        //std::cout << "v=" << v.info() << std::endl;
+
+        // Apply the Householder reflector to the columns of Q and R.
+        for (std::size_t j = 0; j < rows; ++j) {
+            const matrix Qval(Q.slice({diag, j}, {rows - 1, j}));
+            const matrix vv2(v * ((v.transpose() * Qval) * 2.0));
+
+            for (std::size_t i = diag, r = 0; i < rows; ++i, ++r) {
+                //std::cerr << "i=" << i << ", r=" << r << 
+                Q.at(i, j) -= vv2.at(r, 0);
+            }
+        }
+
+        for (std::size_t j = 0; j < columns; ++j) {
+            const matrix Rval(R.slice({diag, j}, {rows - 1, j}));
+            const matrix vv2(v * ((v.transpose() * Rval) * 2.0));
+
+            //std::cout << "Rval=" << Rval.info() << std::endl;
+            //std::cout << "vv2=" << vv2.info() << std::endl;
+
+            for (std::size_t i = diag, r = 0; i < rows; ++i, ++r) {
+                //std::cerr << "i=" << i << ", r=" << r << 
+                R.at(i, j) -= vv2.at(r, 0);
+            }
+        }
+
+        // Zero the cells under the diagonal of R.
+        for (std::size_t i = diag + 1; i < rows; ++i) {
+            R.at(i, diag) = 0.0;
+        }
+    }
+
     // Return the matrices.
-    return { std::move(Q), std::move(R) };
+    return { std::move(Q.transpose()), std::move(R) };
 }
 
 }}

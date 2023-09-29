@@ -221,4 +221,26 @@ std::tuple<matrix, matrix> qr_decomp(const matrix& A)
     return { std::move(Q.transpose()), std::move(R) };
 }
 
+std::vector<double> eigvals(const matrix& A)
+{
+    if (!A.is_square()) {
+        throw std::invalid_argument("matrix must be square");
+    }
+
+    matrix m(A);
+    static constexpr std::size_t max_iter = 100;
+    for (std::size_t i = 0; i < max_iter; ++i) {
+        const auto [Q, R] = qr_decomp(m);
+        matrix::multiply(R, Q, m); // Save a little copying, at least :-)
+
+        // If the matrix is upper triangular, then the solution has
+        // converged.
+        if (m.is_upper_triangular()) {            
+            break;
+        }        
+    }
+
+    return m.diag();
+}
+
 }}

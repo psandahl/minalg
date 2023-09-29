@@ -72,9 +72,11 @@ double det(const matrix& A);
 std::tuple<matrix, matrix> qr_decomp(const matrix& A);
 
 /**
- * @brief Calculate the eigenvalues of the square matrix A.
+ * @brief Calculate the eigenvalues of the square matrix A. Most exact
+ * estimation is given for a symmetric matrix (only those are guaranteed 
+ * real eigen values).
  * @param A matrix A.
- * @return vector with eigenvalues.
+ * @return vector with eigenvalues, sorted in descending order.
 */
 std::vector<double> eigvals(const matrix& A);
 

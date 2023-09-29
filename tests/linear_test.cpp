@@ -384,3 +384,18 @@ TEST(LinearTest, InvalidQrDecomp)
 
     EXPECT_THROW(minalg::linear::qr_decomp(A), std::invalid_argument);
 }
+
+TEST(LinearTest, Eigvals1)
+{
+    // Symmetric matrix.
+    minalg::matrix A({7, 1, -4, 1, 14, -6, -4, -6, 8});
+    A.reshaped({3, 3});
+
+    const std::vector<double> evals(minalg::linear::eigvals(A));
+    EXPECT_EQ(evals.size(), A.rows());
+
+    // Comparing with results from Octave/numpy.
+    EXPECT_NEAR(evals[0], 18.50673941, 1e-08);
+    EXPECT_NEAR(evals[1], 8.2001314, 1e-08);
+    EXPECT_NEAR(evals[2], 2.29312919, 1e-08);
+}

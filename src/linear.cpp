@@ -186,8 +186,12 @@ std::tuple<matrix, matrix> qr_decomp(const matrix& A)
         matrix e(z.shape());
         e.at(0, 0) = 1.0;
 
-        matrix v(e * z.norm() * -sign(z.at(0, 0)) - z);
-        v *= 1.0 / v.norm();
+        // Normal ...
+        matrix n(e * z.norm() * -sign(z.at(0, 0)) - z);
+        n *= 1.0 / n.norm();
+
+        // And normal transpose.
+        const matrix nT(n.transpose());
 
         //std::cout << "z=" << z.info() << std::endl;
         //std::cout << "e=" << e.info() << std::endl;
@@ -196,24 +200,24 @@ std::tuple<matrix, matrix> qr_decomp(const matrix& A)
         // Apply the Householder reflector to the columns of Q and R.
         for (std::size_t j = 0; j < rows; ++j) {
             const matrix Qval(Q.slice({diag, j}, {rows - 1, j}));
-            const matrix vv2(v * ((v.transpose() * Qval) * 2.0));
+            const matrix nn2(n * (nT * Qval) * 2.0);
 
             for (std::size_t i = diag, r = 0; i < rows; ++i, ++r) {
                 //std::cerr << "i=" << i << ", r=" << r << 
-                Q.at(i, j) -= vv2.at(r, 0);
+                Q.at(i, j) -= nn2.at(r, 0);
             }
         }
 
         for (std::size_t j = 0; j < columns; ++j) {
             const matrix Rval(R.slice({diag, j}, {rows - 1, j}));
-            const matrix vv2(v * ((v.transpose() * Rval) * 2.0));
+            const matrix nn2(n * (nT * Rval) * 2.0);
 
             //std::cout << "Rval=" << Rval.info() << std::endl;
             //std::cout << "vv2=" << vv2.info() << std::endl;
 
             for (std::size_t i = diag, r = 0; i < rows; ++i, ++r) {
                 //std::cerr << "i=" << i << ", r=" << r << 
-                R.at(i, j) -= vv2.at(r, 0);
+                R.at(i, j) -= nn2.at(r, 0);
             }
         }
 

@@ -1,6 +1,7 @@
 #include <minalg/linear.hpp>
 #include <minalg/matrix.hpp>
 
+#include <cmath>
 #include <vector>
 
 #include <gtest/gtest.h>
@@ -352,6 +353,28 @@ TEST(LinearTest, QrDecomp2)
     EXPECT_DOUBLE_EQ(R.at(2, 0), 0.0);
     EXPECT_DOUBLE_EQ(R.at(2, 1), 0.0);
     EXPECT_NEAR(R.at(2, 2), -0.0, 1e-05);
+}
+
+TEST(LinearTest, QrDecomp3)
+{
+    std::vector<double> data(100);
+    for (std::size_t i = 0; i < 100; ++i) {
+        data[i] = std::cos(double(i));
+    }
+
+    minalg::matrix A(data);
+    A.reshaped({10, 10});
+
+    const auto [Q, R] = minalg::linear::qr_decomp(A);
+    EXPECT_EQ(Q.shape(), A.shape());
+    EXPECT_EQ(R.shape(), A.shape());
+
+    // Reconstruct from Q * R.
+    const minalg::matrix AA(Q * R);
+    EXPECT_TRUE(A == AA);
+
+    // Q shall be orthogonal.
+    EXPECT_TRUE(Q.is_orthogonal());
 }
 
 TEST(LinearTest, InvalidQrDecomp)

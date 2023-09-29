@@ -266,3 +266,37 @@ TEST(LinearTest, Det)
     const minalg::matrix m5(minalg::matrix({0, 1, 0, 0, 0, 1, 0, 0, 1}).reshape({3, 3}));
     EXPECT_DOUBLE_EQ(minalg::linear::det(m5), 0.0);
 }
+
+TEST(LinearTest, QrDecomp1)
+{
+    minalg::matrix A({1, 2, 3, 4, 5, 6});
+    A.reshaped({3, 2});
+
+    const auto [Q, R] = minalg::linear::qr_decomp(A);
+    EXPECT_EQ(Q.rows(), 3);
+    EXPECT_EQ(Q.columns(), 3);
+
+    EXPECT_EQ(R.rows(), 3);
+    EXPECT_EQ(R.columns(), 2);
+}
+
+TEST(LinearTest, QrDecomp2)
+{
+    minalg::matrix A({1, 2, 3, 4, 5, 6, 7, 8, 9});
+    A.reshaped({3, 3});
+
+    const auto [Q, R] = minalg::linear::qr_decomp(A);
+    EXPECT_EQ(Q.rows(), 3);
+    EXPECT_EQ(Q.columns(), 3);
+
+    EXPECT_EQ(R.rows(), 3);
+    EXPECT_EQ(R.columns(), 3);
+}
+
+TEST(LinearTest, InvalidQrDecomp)
+{
+    minalg::matrix A({1, 2, 3, 4, 5, 6});
+    A.reshaped({2, 3});
+
+    EXPECT_THROW(minalg::linear::qr_decomp(A), std::invalid_argument);
+}

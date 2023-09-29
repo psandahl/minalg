@@ -113,8 +113,8 @@ matrix lu_solve(const std::tuple<matrix, matrix, matrix>& PLU, const matrix& b)
 
     // Step 1. Forward substitution using L and b: Ly = b.
     // Assume L has ones on the diagonal during the forward substitution.
-    minalg::matrix Pb(P * b); // Apply permutation on b.
-    minalg::matrix y(Pb.shape());    
+    matrix Pb(P * b); // Apply permutation on b.
+    matrix y(Pb.shape());    
 
     for (std::size_t diag = 0; diag < L.rows(); ++diag) {
         double value = Pb.at(diag, 0);
@@ -125,7 +125,7 @@ matrix lu_solve(const std::tuple<matrix, matrix, matrix>& PLU, const matrix& b)
     }    
 
     // Step 2. Backward substitution using U and y: Ux = y.
-    minalg::matrix x(y.shape());
+    matrix x(y.shape());
 
     for (int diag = U.rows() - 1; diag >= 0; --diag) {        
         double value = y.at(diag, 0);        
@@ -164,6 +164,20 @@ double det(const matrix& A)
         // The matrix A is singular - the determinant is zero.
         return 0.0;
     }
+}
+
+std::tuple<matrix, matrix> qr_decomp(const matrix& A)
+{    
+    const auto [rows, columns] = A.shape();
+    if (rows < columns) {
+        throw std::invalid_argument("matrix must be tall or square");
+    }
+
+    matrix Q(matrix::eye(rows));
+    matrix R(A);
+
+    // Return the matrices.
+    return { std::move(Q), std::move(R) };
 }
 
 }}

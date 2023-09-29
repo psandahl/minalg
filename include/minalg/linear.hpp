@@ -62,4 +62,10 @@ matrix lu_solve(const std::tuple<matrix, matrix, matrix>& PLU, const matrix& b);
 */
 double det(const matrix& A);
 
+/**
+ * @brief Perform QR decomposition of the (square or tall) matrix A into the 
+ * matrices Q (orthogonal matrix) and R (upper triangular matrix).
+*/
+std::tuple<matrix, matrix> qr_decomp(const matrix& A);
+
 }}

@@ -1,5 +1,6 @@
 #include <minalg/matrix.hpp>
 
+#include <cmath>
 #include <cstddef>
 #include <memory>
 #include <stdexcept>
@@ -148,6 +149,27 @@ TEST(MatrixTest, AccessOutOfRange)
     EXPECT_THROW(m.at(2, 3), std::out_of_range);
     EXPECT_THROW(m.at(3, 2), std::out_of_range);
     EXPECT_THROW(m.at(3, 3), std::out_of_range);
+}
+
+TEST(MatrixTest, ValidNorm)
+{
+    minalg::matrix m({2, 3, 4});
+
+    const double expected = std::sqrt(2 * 2 + 3 * 3 + 4 * 4);
+
+    m.reshaped({3, 1});
+    EXPECT_DOUBLE_EQ(m.norm(), expected);
+
+    m.reshaped({1, 3});
+    EXPECT_DOUBLE_EQ(m.norm(), expected);
+}
+
+TEST(MatrixTest, InvalidNorm)
+{
+    minalg::matrix m({1, 2, 3, 4});
+
+    m.reshaped({2, 2});
+    EXPECT_THROW(m.norm(), std::invalid_argument);
 }
 
 TEST(MatrixTest, Eye)

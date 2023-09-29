@@ -99,6 +99,12 @@ public:
     std::size_t size() const { return rows() * columns(); }
 
     /**
+     * @brief Get the L2 norm of a column or row matrix.
+     * @return the L2 norm.
+    */
+    double norm() const;
+
+    /**
      * @brief Check whether the matrix is square.
      * @return boolean value.
     */

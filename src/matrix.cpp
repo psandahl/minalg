@@ -1,6 +1,7 @@
 #include <minalg/matrix.hpp>
 #include "util.hpp"
 
+#include <cmath>
 #include <cstring>
 #include <sstream>
 
@@ -83,6 +84,22 @@ matrix::~matrix()
     _columns = 0;
     delete[] _data;
     _data = nullptr;
+}
+
+double matrix::norm() const
+{
+    if (rows() > 1 && columns() > 1) {
+        throw std::invalid_argument("Must be either a column matrix or row matrix");
+    }
+
+    const double* ptr = &get(0, 0);
+    double sum = 0.0;
+    for (std::size_t i = 0; i < size(); ++i) {
+        const double value = *ptr++;
+        sum += value * value;
+    }
+
+    return std::sqrt(sum);
 }
 
 std::string matrix::info(std::streamsize precision) const

@@ -21,17 +21,17 @@ matrix invert(const matrix& A)
     const std::tuple<matrix, matrix, matrix> PLU(lu_decomp(A));
 
     matrix A_inv(A.shape());    
-    matrix in(A.rows(), 1);    
+    matrix b(A.rows(), 1);    
 
     for (std::size_t diag = 0; diag < A_inv.rows(); ++diag) {
         if (diag > 0) {
-            in.at(diag - 1, 0) = 0.0;
+            b.at(diag - 1, 0) = 0.0;
         }
-        in.at(diag, 0) = 1.0;
+        b.at(diag, 0) = 1.0;
 
-        const matrix out(lu_solve(PLU, in));
+        const matrix x(lu_solve(PLU, b));
         for (std::size_t row = 0; row < A_inv.rows(); ++row) {
-            A_inv.at(row, diag) = out.at(row, 0);
+            A_inv.at(row, diag) = x.at(row, 0);
         }
     }
 

@@ -399,7 +399,12 @@ TEST(LinearTest, Eigvals1)
     EXPECT_NEAR(evals[1], 8.2001314, 1e-08);
     EXPECT_NEAR(evals[2], 2.29312919, 1e-08);
 
-    // TODO: Property check with determinant.
+    // Property check with determinant.
+    EXPECT_DOUBLE_EQ(minalg::linear::det(A), 348.0);
+
+    EXPECT_DOUBLE_EQ(minalg::linear::det(A - minalg::matrix::eye(A.rows()) * evals[0]), 0.0);    
+    EXPECT_DOUBLE_EQ(minalg::linear::det(A - minalg::matrix::eye(A.rows()) * evals[1]), 0.0);    
+    EXPECT_DOUBLE_EQ(minalg::linear::det(A - minalg::matrix::eye(A.rows()) * evals[2]), 0.0);
 }
 
 TEST(LinearTest, Eigvals2)
@@ -416,5 +421,59 @@ TEST(LinearTest, Eigvals2)
     EXPECT_NEAR(evals[1], -0.37253087, 1e-08);
     EXPECT_NEAR(evals[2], 0.02627577, 1e-08);
 
-    // TODO: Property check with determinant.
+    // Property check with determinant.
+    EXPECT_DOUBLE_EQ(minalg::linear::det(A), -0.015625);
+
+    EXPECT_DOUBLE_EQ(minalg::linear::det(A - minalg::matrix::eye(A.rows()) * evals[0]), 0.0);    
+    EXPECT_NEAR(minalg::linear::det(A - minalg::matrix::eye(A.rows()) * evals[1]), 0.0, 1e-08);    
+    EXPECT_DOUBLE_EQ(minalg::linear::det(A - minalg::matrix::eye(A.rows()) * evals[2]), 0.0);
+}
+
+TEST(LinearTest, Eigvals3)
+{
+    // Begin with non symmetric matrix.
+    const std::vector<double> data =
+    {
+        3, 1, -2, 5, -1,
+        2, 7, -8, 9, 3,
+        0, -4, 2, 6, 1,
+        1, 5, 0, -2, 2,
+        -1, 0, 3, -3, 6
+    };
+
+    minalg::matrix A(data);
+    A.reshaped({5, 5});
+
+    const std::vector<double> evalsA(minalg::linear::eigvals(A));
+    EXPECT_EQ(evalsA.size(), A.rows());
+    EXPECT_NEAR(evalsA[0],  11.676645, 1e-06);
+    EXPECT_NEAR(evalsA[1],  -7.874241, 1e-06);
+    EXPECT_NEAR(evalsA[2],  7.261982, 1e-06);
+    EXPECT_NEAR(evalsA[3],  3.635010, 1e-06);
+    EXPECT_NEAR(evalsA[4],  1.300603, 1e-06);
+
+    EXPECT_DOUBLE_EQ(minalg::linear::det(A), -3157.0);    
+    EXPECT_DOUBLE_EQ(minalg::linear::det(A - minalg::matrix::eye(A.rows()) * evalsA[0]), 0.0);
+    // EXPECT_DOUBLE_EQ(minalg::linear::det(A - minalg::matrix::eye(A.rows()) * evalsA[1]), 0.0);
+    // EXPECT_DOUBLE_EQ(minalg::linear::det(A - minalg::matrix::eye(A.rows()) * evalsA[2]), 0.0);
+    EXPECT_DOUBLE_EQ(minalg::linear::det(A - minalg::matrix::eye(A.rows()) * evalsA[3]), 0.0);
+    EXPECT_DOUBLE_EQ(minalg::linear::det(A - minalg::matrix::eye(A.rows()) * evalsA[4]), 0.0);
+
+    // ... and then symmetric.
+    const minalg::matrix B(A.transpose() * A);
+
+    const std::vector<double> evalsB(minalg::linear::eigvals(B));    
+    EXPECT_EQ(evalsB.size(), B.rows());
+    EXPECT_NEAR(evalsB[0],  246.302868, 1e-06);
+    EXPECT_NEAR(evalsB[1],  90.462589, 1e-06);    
+    EXPECT_NEAR(evalsB[2],  47.509092, 1e-06);    
+    EXPECT_NEAR(evalsB[3],  7.464025, 1e-06);    
+    EXPECT_NEAR(evalsB[4],  1.261423, 1e-06);    
+
+    EXPECT_DOUBLE_EQ(minalg::linear::det(B), 9966649.0);
+    EXPECT_DOUBLE_EQ(minalg::linear::det(B - minalg::matrix::eye(B.rows()) * evalsB[0]), 0.0);
+    EXPECT_DOUBLE_EQ(minalg::linear::det(B - minalg::matrix::eye(B.rows()) * evalsB[1]), 0.0);
+    EXPECT_DOUBLE_EQ(minalg::linear::det(B - minalg::matrix::eye(B.rows()) * evalsB[2]), 0.0);
+    EXPECT_DOUBLE_EQ(minalg::linear::det(B - minalg::matrix::eye(B.rows()) * evalsB[3]), 0.0);
+    EXPECT_DOUBLE_EQ(minalg::linear::det(B - minalg::matrix::eye(B.rows()) * evalsB[4]), 0.0);
 }

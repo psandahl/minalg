@@ -25,13 +25,13 @@ matrix invert(const matrix& A)
 
     for (std::size_t diag = 0; diag < A_inv.rows(); ++diag) {
         if (diag > 0) {
-            b.at(diag - 1, 0) = 0.0;
+            b.get(diag - 1, 0) = 0.0;
         }
-        b.at(diag, 0) = 1.0;
+        b.get(diag, 0) = 1.0;
 
         const matrix x(lu_solve(PLU, b));
         for (std::size_t row = 0; row < A_inv.rows(); ++row) {
-            A_inv.at(row, diag) = x.at(row, 0);
+            A_inv.get(row, diag) = x.get(row, 0);
         }
     }
 
@@ -60,14 +60,14 @@ std::tuple<matrix, matrix, matrix> lu_decomp(const matrix& A)
         std::swap(rows[pivot_row_index], rows[diag]);        
 
         // Read the pivot value. Throw if close to zero.
-        const double pivot_value = Up.at(rows[diag], diag);
+        const double pivot_value = Up.get(rows[diag], diag);
         if (near_zero(pivot_value)) {
             throw singular_matrix("lu_decomp()");
         }
 
         // Eliminate rows in U, and set cells in L.
         for (std::size_t elim = diag + 1; elim < rows.size(); ++elim) {
-            const double elim_value = Up.at(rows[elim], diag) / pivot_value;            
+            const double elim_value = Up.get(rows[elim], diag) / pivot_value;            
 
             Lp.get(rows[elim], diag) = elim_value;
             Up.linearly_combine(rows[diag], -elim_value, rows[elim]);
@@ -117,22 +117,22 @@ matrix lu_solve(const std::tuple<matrix, matrix, matrix>& PLU, const matrix& b)
     matrix y(Pb.shape());    
 
     for (std::size_t diag = 0; diag < L.rows(); ++diag) {
-        double value = Pb.at(diag, 0);
+        double value = Pb.get(diag, 0);
         for (std::size_t i = 0; i < diag; ++i) {
-            value -= L.at(diag, i) * y.at(i, 0);
+            value -= L.get(diag, i) * y.get(i, 0);
         }
-        y.at(diag, 0) = value;
+        y.get(diag, 0) = value;
     }    
 
     // Step 2. Backward substitution using U and y: Ux = y.
     matrix x(y.shape());
 
     for (int diag = U.rows() - 1; diag >= 0; --diag) {        
-        double value = y.at(diag, 0);        
+        double value = y.get(diag, 0);        
         for (int i = U.columns() - 1; i > diag; --i) {            
-            value -= U.at(diag, i) * x.at(i, 0);
+            value -= U.get(diag, i) * x.get(i, 0);
         }        
-        x.at(diag, 0) = value / U.at(diag, diag);
+        x.get(diag, 0) = value / U.get(diag, diag);
     }    
 
     return x;
@@ -183,10 +183,10 @@ std::tuple<matrix, matrix> qr_decomp(const matrix& A)
         const matrix z(R.slice({diag, diag}, {rows - 1, diag}));
 
         matrix e(z.shape());
-        e.at(0, 0) = 1.0;
+        e.get(0, 0) = 1.0;
 
         // Normal ...
-        matrix n(e * z.norm() * -sign(z.at(0, 0)) - z);
+        matrix n(e * z.norm() * -sign(z.get(0, 0)) - z);
         n *= 1.0 / n.norm();
 
         // ... and normal transpose.
@@ -198,7 +198,7 @@ std::tuple<matrix, matrix> qr_decomp(const matrix& A)
             const matrix nn2(n * (nT * Qval) * 2.0);
 
             for (std::size_t i = diag, r = 0; i < rows; ++i, ++r) {                
-                Q.at(i, j) -= nn2.at(r, 0);
+                Q.get(i, j) -= nn2.get(r, 0);
             }
         }
 
@@ -207,13 +207,13 @@ std::tuple<matrix, matrix> qr_decomp(const matrix& A)
             const matrix nn2(n * (nT * Rval) * 2.0);
             
             for (std::size_t i = diag, r = 0; i < rows; ++i, ++r) {            
-                R.at(i, j) -= nn2.at(r, 0);
+                R.get(i, j) -= nn2.get(r, 0);
             }
         }
 
         // Zero the cells under the diagonal of R.
         for (std::size_t i = diag + 1; i < rows; ++i) {
-            R.at(i, diag) = 0.0;
+            R.get(i, diag) = 0.0;
         }
     }
 
@@ -270,7 +270,7 @@ std::tuple<std::vector<double>, matrix> eig(const matrix& A)
         static constexpr double offset = 0.1;
         matrix m(A);
         for (std::size_t diag = 0; diag < m.rows(); ++diag) {
-            m.at(diag, diag) -= eval + offset;
+            m.get(diag, diag) -= eval + offset;
         }
 
         // LU decomposition of m.
@@ -297,7 +297,7 @@ std::tuple<std::vector<double>, matrix> eig(const matrix& A)
 
         // Set result in eigenvector matrix.
         for (std::size_t j = 0; j < v.rows(); ++j) {
-            evecs.at(j, i) = v.at(j, 0);
+            evecs.get(j, i) = v.get(j, 0);
         }
     }
 

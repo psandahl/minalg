@@ -243,4 +243,65 @@ std::vector<double> eigvals(const matrix& A)
     return m.diag();
 }
 
+std::tuple<std::vector<double>, matrix> eig(const matrix& A)
+{
+    if (!A.is_symmetric()) {
+        throw std::invalid_argument("matrix must be symmetric");
+    }
+
+    // Calculate the eigenvalues.
+    const std::vector<double> evals(eigvals(A));
+    
+    // Pre-compute initial vector values.
+    const std::vector<double> initial(evals.size(), 1.0);
+
+    // Matrix with eigenvector results.
+    matrix evecs(A.shape());
+
+    static constexpr std::size_t max_iter = 100;
+    static constexpr double threshold = 1e-07;
+
+    // Calculate the eigenvectors using shifted power iterations.
+    for (std::size_t i = 0; i < evals.size(); ++i) {
+        const double eval = evals[i];
+
+        // Calculate m = A - lambda * eye. Add offset to prevent
+        // singular matrix when eigenvalues are subtracted.
+        static constexpr double offset = 0.1;
+        matrix m(A);
+        for (std::size_t diag = 0; diag < m.rows(); ++diag) {
+            m.at(diag, diag) -= eval + offset;
+        }
+
+        // LU decomposition of m.
+        const auto PLU(lu_decomp(m));
+
+        // Set initial vector.
+        matrix v(initial);
+        v.reshaped({ m.rows(), 1 });
+        
+        // Refine the initial vector.
+        for (std::size_t j = 0; j < max_iter; ++j) {
+            // A lot of temporary matrices there is :-(. Perhaps an alternative version
+            // of lu_solve, with explicit target matrix?
+            matrix tmp(lu_solve(PLU, v));
+            tmp *= (1.0 / tmp.norm());
+
+            const matrix diff(abs(tmp) - abs(v));
+            v = std::move(tmp);
+
+            if (diff.norm() < threshold) {                
+                break;
+            }
+        }
+
+        // Set result in eigenvector matrix.
+        for (std::size_t j = 0; j < v.rows(); ++j) {
+            evecs.at(j, i) = v.at(j, 0);
+        }
+    }
+
+    return { std::move(evals), std::move(evecs) };
+}
+
 }}

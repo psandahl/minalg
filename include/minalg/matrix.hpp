@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cmath>
 #include <cstddef>
 #include <stdexcept>
 #include <string>
@@ -474,6 +475,19 @@ inline matrix& operator -= (matrix& lhs, double value)
     }
 
     return lhs;
+}
+
+inline matrix abs(const matrix& m0)
+{
+    matrix m1(m0.shape());
+
+    const double* src_ptr = &m0.get(0, 0);
+    double* dst_ptr = &m1.get(0, 0);
+    for (std::size_t i = 0; i < m0.size(); ++i) {
+        *dst_ptr++ = std::fabs(*src_ptr++);
+    }
+
+    return m1;
 }
 
 }

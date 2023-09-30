@@ -80,4 +80,13 @@ std::tuple<matrix, matrix> qr_decomp(const matrix& A);
 */
 std::vector<double> eigvals(const matrix& A);
 
+/**
+ * @brief Calculate the eigenvalues and eigenvectors of the square and
+ * symmetric matrix A.
+ * @param A matrix A.
+ * @return tuple with eigenvalues, sorted in descending order, and matrix
+ * with corresponding eigenvectors.
+*/
+std::tuple<std::vector<double>, matrix> eig(const matrix& A);
+
 }}

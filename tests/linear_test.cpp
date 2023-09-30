@@ -477,3 +477,38 @@ TEST(LinearTest, Eigvals3)
     EXPECT_DOUBLE_EQ(minalg::linear::det(B - minalg::matrix::eye(B.rows()) * evalsB[3]), 0.0);
     EXPECT_DOUBLE_EQ(minalg::linear::det(B - minalg::matrix::eye(B.rows()) * evalsB[4]), 0.0);
 }
+
+TEST(LinearTest, Eig1)
+{
+    minalg::matrix A({7, 1, -4, 1, 14, -6, -4, -6, 8});
+    A.reshaped({3, 3});
+
+    const auto [evals, evecs] = minalg::linear::eig(A);
+    EXPECT_EQ(evals.size(), A.rows());
+    EXPECT_EQ(evecs.shape(), A.shape());
+
+    EXPECT_NEAR(evals[0], 18.50673941, 1e-08);
+    EXPECT_NEAR(evals[1], 8.2001314, 1e-08);
+    EXPECT_NEAR(evals[2], 2.29312919, 1e-08);
+
+    EXPECT_NEAR(evecs.at(0, 0), -0.260628, 1e-06);
+    EXPECT_NEAR(evecs.at(1, 0), -0.792294, 1e-06);
+    EXPECT_NEAR(evecs.at(2, 0),  0.5516725, 1e-06);
+
+    EXPECT_NEAR(evecs.at(0, 1), -0.781269, 1e-06);
+    EXPECT_NEAR(evecs.at(1, 1), 0.508784, 1e-06);
+    EXPECT_NEAR(evecs.at(2, 1),  0.361602, 1e-06);
+
+    EXPECT_NEAR(evecs.at(0, 2), -0.567178, 1e-06);
+    EXPECT_NEAR(evecs.at(1, 2), -0.336760, 1e-06);
+    EXPECT_NEAR(evecs.at(2, 2), -0.751598, 1e-06);
+}
+
+TEST(LinearTest, InvalidEig)
+{
+    // Non symmetric matrix.
+    minalg::matrix A({0.5, 0.75, 0.5, 1., 0.5, 0.75, 0.25, 0.25, 0.25});
+    A.reshaped({3, 3});
+
+    EXPECT_THROW(minalg::linear::eig(A), std::invalid_argument);
+}

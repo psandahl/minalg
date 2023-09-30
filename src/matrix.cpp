@@ -1,7 +1,6 @@
 #include <minalg/matrix.hpp>
 #include "util.hpp"
 
-#include <cmath>
 #include <cstring>
 #include <sstream>
 

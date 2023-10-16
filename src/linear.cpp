@@ -12,8 +12,15 @@ namespace minalg {
 namespace linear {
 
 matrix solve(const matrix& A, const matrix& b)
-{    
-    return lu_solve(lu_decomp(A), b);
+{
+    if (A.is_square()) {
+        return lu_solve(lu_decomp(A), b);
+    } else if (A.rows() > A.columns() && b.rows() == A.rows() && b.columns() == 1) {
+        const matrix At(A.transpose());
+        return lu_solve(lu_decomp(At * A), At * b);
+    } else {
+        throw std::invalid_argument("matrix A must be square or tall");
+    }
 }
 
 matrix invert(const matrix& A)

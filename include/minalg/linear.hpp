@@ -25,8 +25,8 @@ public:
 };
 
 /**
- * @brief Solve the linear system Ax=b.
- * @param A square matrix A.
+ * @brief Solve the system Ax = b or AtAx = Atb (i.e. overdetermined system).
+ * @param A square or tall matrix A.
  * @param b single column matrix b.
  * @return single column matrix x with solution.
 */

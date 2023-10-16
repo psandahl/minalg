@@ -62,6 +62,28 @@ TEST(LinearTest, Solve2)
     EXPECT_DOUBLE_EQ(b2.at(4, 0), b.at(4, 0));
 }
 
+TEST(LinearTest, Solve3)
+{
+    // Overdetermined system.
+    const std::vector<double> data =
+    {
+        2, -2, 4,
+        6, 8, -6,
+        9, -5, 1,
+        3, 2, -2
+    };
+    const minalg::matrix A(minalg::matrix(data).reshape({4, 3}));
+    const minalg::matrix b({1, -1, 4, -5});
+    const minalg::matrix x(minalg::linear::solve(A, b));
+
+    EXPECT_EQ(x.rows(), 3);
+    EXPECT_EQ(x.columns(), 1);
+
+    EXPECT_NEAR(x.at(0, 0), 0.153313934, 1e-09);
+    EXPECT_NEAR(x.at(1, 0), -0.394600711, 1e-09);
+    EXPECT_NEAR(x.at(2, 0), 0.038312318, 1e-09);
+}
+
 TEST(LinearTest, InvalidSolve1)
 {
     const minalg::matrix A(minalg::matrix({0, 1, 0, -1}).reshape({2, 2}));
@@ -71,7 +93,8 @@ TEST(LinearTest, InvalidSolve1)
 
 TEST(LinearTest, InvalidSolve2)
 {
-    const minalg::matrix A(minalg::matrix({1, 2, 3, 4, 5, 6}).reshape({3, 2}));
+    // Underdetermined system.
+    const minalg::matrix A(minalg::matrix({1, 2, 3, 4, 5, 6}).reshape({2, 3}));
     const minalg::matrix b(std::vector<double>({1, 2, 3}));
     EXPECT_THROW(minalg::linear::solve(A, b), std::invalid_argument);
 }

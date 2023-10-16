@@ -399,6 +399,9 @@ TEST(LinearTest, Eigvals1)
     EXPECT_NEAR(evals[1], 8.2001314, 1e-08);
     EXPECT_NEAR(evals[2], 2.29312919, 1e-08);
 
+    // Sum of eigen values shall be equal to trace.
+    EXPECT_NEAR(std::accumulate(evals.begin(), evals.end(), 0.0), A.trace(), 1e-09);
+
     // Property check with determinant.
     EXPECT_DOUBLE_EQ(minalg::linear::det(A), 348.0);
 
@@ -420,6 +423,9 @@ TEST(LinearTest, Eigvals2)
     EXPECT_NEAR(evals[0], 1.5962551, 1e-08);
     EXPECT_NEAR(evals[1], -0.37253087, 1e-08);
     EXPECT_NEAR(evals[2], 0.02627577, 1e-08);
+
+    // Sum of eigen values shall be equal to trace.
+    EXPECT_NEAR(std::accumulate(evals.begin(), evals.end(), 0.0), A.trace(), 1e-09);
 
     // Property check with determinant.
     EXPECT_DOUBLE_EQ(minalg::linear::det(A), -0.015625);
@@ -452,7 +458,12 @@ TEST(LinearTest, Eigvals3)
     EXPECT_NEAR(evalsA[3],  3.635010, 1e-06);
     EXPECT_NEAR(evalsA[4],  1.300603, 1e-06);
 
+    // Sum of eigen values shall be equal to trace.
+    EXPECT_NEAR(std::accumulate(evalsA.begin(), evalsA.end(), 0.0), A.trace(), 1e-09);
+
     EXPECT_DOUBLE_EQ(minalg::linear::det(A), -3157.0);    
+
+    // Subtract I times any eigen value and the determinant shall be zero.
     EXPECT_DOUBLE_EQ(minalg::linear::det(A - minalg::matrix::eye(A.rows()) * evalsA[0]), 0.0);
     // EXPECT_DOUBLE_EQ(minalg::linear::det(A - minalg::matrix::eye(A.rows()) * evalsA[1]), 0.0);
     // EXPECT_DOUBLE_EQ(minalg::linear::det(A - minalg::matrix::eye(A.rows()) * evalsA[2]), 0.0);
@@ -469,6 +480,9 @@ TEST(LinearTest, Eigvals3)
     EXPECT_NEAR(evalsB[2],  47.509092, 1e-06);    
     EXPECT_NEAR(evalsB[3],  7.464025, 1e-06);    
     EXPECT_NEAR(evalsB[4],  1.261423, 1e-06);    
+
+    // Sum of eigen values shall be equal to trace.
+    EXPECT_NEAR(std::accumulate(evalsB.begin(), evalsB.end(), 0.0), B.trace(), 1e-09);
 
     EXPECT_DOUBLE_EQ(minalg::linear::det(B), 9966649.0);
     EXPECT_DOUBLE_EQ(minalg::linear::det(B - minalg::matrix::eye(B.rows()) * evalsB[0]), 0.0);

@@ -204,6 +204,14 @@ TEST(MatrixTest, InvalidDiag)
     EXPECT_THROW(m.diag(), std::invalid_argument);
 }
 
+TEST(MatrixTest, Trace)
+{
+    const std::vector<double> vec0 = {1.0, 2.0, 3.0};
+    const minalg::matrix m(minalg::matrix::diag(vec0));
+
+    EXPECT_DOUBLE_EQ(m.trace(), 1 + 2 + 3);
+}
+
 TEST(MatrixTest, ValidReshape)
 {
     const std::vector<double> vec = { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 };

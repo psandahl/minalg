@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <cstddef>
+#include <numeric>
 #include <stdexcept>
 #include <string>
 #include <tuple>
@@ -172,6 +173,15 @@ public:
     std::vector<double> diag() const { return diag(*this); }
 
     /**
+     * @brief Calculate the trace of the matrix.
+     * @return sum of diagonals.
+    */
+    double trace() const { 
+        const std::vector<double> v(diag());
+        return std::accumulate(v.begin(), v.end(), 0.0);
+    }    
+
+    /**
      * @brief Reshape this matrix.
      * @param shape new shape.
      * @return this matrix.
@@ -250,7 +260,7 @@ public:
      * @brief Extract the diagonal values.
      * @return vector with values.
     */
-    static std::vector<double> diag(const matrix& m);
+    static std::vector<double> diag(const matrix& m);    
 
     /**
      * @brief Reshape the matrix to new shape.
